@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83371004-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>比特币数据结构科普 | Jiavan 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="地址私钥由 32 字节随机数组成，通过私钥可以计算出公钥，公钥通过一系列 hash 和编码（Base58，避免书写混淆如I和L）可以得到比特币地址，可以简单的将地址理解为公钥的摘要。# 比特币使用了椭圆曲线签名算法私钥 =&amp;gt; 公钥 =&amp;gt; 比特币地址 区块结构区块 hash 值计算其实不会包含区块体，打包时只有区块头被用于计算 hash，常说的区块 hash 其实是区块头的 hash，他">
+<meta name="keywords" content="btc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="比特币数据结构科普">
+<meta property="og:url" content="https://jiavan.com/2018/08/26/比特币数据结构科普/index.html">
+<meta property="og:site_name" content="Jiavan 的博客">
+<meta property="og:description" content="地址私钥由 32 字节随机数组成，通过私钥可以计算出公钥，公钥通过一系列 hash 和编码（Base58，避免书写混淆如I和L）可以得到比特币地址，可以简单的将地址理解为公钥的摘要。# 比特币使用了椭圆曲线签名算法私钥 =&amp;gt; 公钥 =&amp;gt; 比特币地址 区块结构区块 hash 值计算其实不会包含区块体，打包时只有区块头被用于计算 hash，常说的区块 hash 其实是区块头的 hash，他">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://jiavan.com/images/block-structure.jpeg">
+<meta property="og:image" content="https://jiavan.com/images/merkle-tree.png">
+<meta property="og:updated_time" content="2018-08-26T09:37:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="比特币数据结构科普">
+<meta name="twitter:description" content="地址私钥由 32 字节随机数组成，通过私钥可以计算出公钥，公钥通过一系列 hash 和编码（Base58，避免书写混淆如I和L）可以得到比特币地址，可以简单的将地址理解为公钥的摘要。# 比特币使用了椭圆曲线签名算法私钥 =&amp;gt; 公钥 =&amp;gt; 比特币地址 区块结构区块 hash 值计算其实不会包含区块体，打包时只有区块头被用于计算 hash，常说的区块 hash 其实是区块头的 hash，他">
+<meta name="twitter:image" content="https://jiavan.com/images/block-structure.jpeg">
+  
+    <link rel="alternate" href="/atom.xml" title="Jiavan 的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jiavan 的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jiavan.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-比特币数据结构科普" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/26/比特币数据结构科普/" class="article-date">
+  <time datetime="2018-08-26T09:33:15.000Z" itemprop="datePublished">2018-08-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/block-chain/">block-chain</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      比特币数据结构科普
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="地址"><a href="#地址" class="headerlink" title="地址"></a>地址</h2><p>私钥由 32 字节随机数组成，通过私钥可以计算出公钥，公钥通过一系列 hash 和编码（Base58，避免书写混淆如I和L）可以得到比特币地址，可以简单的将地址理解为公钥的摘要。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 比特币使用了椭圆曲线签名算法</span><br><span class="line">私钥 =&gt; 公钥 =&gt; 比特币地址</span><br></pre></td></tr></table></figure></p>
+<h2 id="区块结构"><a href="#区块结构" class="headerlink" title="区块结构"></a>区块结构</h2><p><img src="/images/block-structure.jpeg" alt="block-structure"><br>区块 hash 值计算其实不会包含区块体，打包时只有区块头被用于计算 hash，常说的区块 hash 其实是区块头的 hash，他可以用来标识一个区块。<br>区块头是 80 个字节，而平均每个区块包含 2500 左右个交易，所以完整的交易信息比区块头会大很多。</p>
+<h2 id="Merkle-树"><a href="#Merkle-树" class="headerlink" title="Merkle 树"></a>Merkle 树</h2><p>在了解 Merkle 树之前我们先了解<code>零知识证明</code>。</p>
+<blockquote>
+<p>证明者在不向验证者提供任何有用信息的前提下，使验证者相信某个论断是正确的。<br>例如，A 向 B 证明自己有一个物品，但 B 无法拿到这个物品，B 无法用 A 的证明去向别人证明自己也拥有这个物品。</p>
+</blockquote>
+<p><img src="/images/merkle-tree.png" alt="merkle-tree"><br>默克尔树的特点是任何底层数据的变化都会传递到其父节点，一直到树根。</p>
+<p>默克尔树的经典应用场景：</p>
+<ul>
+<li>快速比较大量数据，当两个默克尔树树根相同时，则意味着所代表的数据必然相同。</li>
+<li>快速定位修改，如果 D0 被修改，会影响到 N0，N4，Root。因此定位修改可以通过 Root -&gt; N4 -&gt; N0 快速定位到 D0 的修改。</li>
+<li>零知识证明，例如如何证明某个数据中包含 D0，可以直接构建一个 Merkle 树，公布 N0、N1、N4、N5、Root，可以很容易检测到 D0 的存在，但不知道其内容。</li>
+</ul>
+<p>每个交易被看成一个数据块，Merkle 树是一种哈希二叉树，这样可以单独拿出一颗子树来对部分数据进行校验。<br>每个叶子节点是交易信息的哈希，往上的父节点是子节点哈希串拼接之后的再次哈希，直到剩下一个根节点即为 Merkel 树根，树根将会被存入区块头。<br>Merkle 树需要偶数个叶子节点，所以在出现奇数个交易时，最后一个叶子节点会被复制一份构成偶数个叶子节点。</p>
+<h2 id="SPV"><a href="#SPV" class="headerlink" title="SPV"></a>SPV</h2><p>由于不是所有节点都具备储存完整区块信息的能力，更多节点是以 SPV（Simplified Payment Verification 简单支付验证）钱包的方式接入比特币网络。通过 SPV 仅仅保存区块头可以在不拥有完整区块数据的情况下对交易进行验证。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2018/08/26/比特币数据结构科普/" data-id="cjlanu78i00236vqf3h7tkz2k" class="article-share-link">Share</a>
+      
+        <a href="https://jiavan.com/2018/08/26/比特币数据结构科普/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/btc/">btc</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/03/06/过去的-2017/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">过去的 2017</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/block-chain/">block-chain</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chromeapp/">chromeapp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/css/">css</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/note/">note</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding-is-interesting/">Coding is interesting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSQL/">NoSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/annual-summary/">annual-summary</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/btc/">btc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chromeapp/">chromeapp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dom/">dom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flux/">flux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game-dev/">game-dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gcd/">gcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http/">http</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libgdx/">libgdx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltc/">ltc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pow/">pow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/">story</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端自动化/">前端自动化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序/">排序</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Coding-is-interesting/" style="font-size: 10px;">Coding is interesting</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/NoSQL/" style="font-size: 10px;">NoSQL</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/annual-summary/" style="font-size: 10px;">annual-summary</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/btc/" style="font-size: 10px;">btc</a> <a href="/tags/c/" style="font-size: 18px;">c</a> <a href="/tags/chromeapp/" style="font-size: 16px;">chromeapp</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/dom/" style="font-size: 10px;">dom</a> <a href="/tags/flux/" style="font-size: 12px;">flux</a> <a href="/tags/game-dev/" style="font-size: 10px;">game-dev</a> <a href="/tags/gcd/" style="font-size: 10px;">gcd</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/libgdx/" style="font-size: 10px;">libgdx</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/ltc/" style="font-size: 10px;">ltc</a> <a href="/tags/math/" style="font-size: 14px;">math</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/pow/" style="font-size: 10px;">pow</a> <a href="/tags/react/" style="font-size: 12px;">react</a> <a href="/tags/redux/" style="font-size: 12px;">redux</a> <a href="/tags/story/" style="font-size: 10px;">story</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/前端自动化/" style="font-size: 10px;">前端自动化</a> <a href="/tags/排序/" style="font-size: 10px;">排序</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/08/26/比特币数据结构科普/">比特币数据结构科普</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/06/过去的-2017/">过去的 2017</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/10/awk-入坑指北/">awk 入坑指北</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/12/关于自由软件与开源协议/">关于自由软件与开源协议</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/10/CPU挖矿-利用VPS挖莱特币/">CPU挖矿-利用VPS挖莱特币</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Jiavan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'jiavan';
+  
+  var disqus_url = 'https://jiavan.com/2018/08/26/比特币数据结构科普/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
