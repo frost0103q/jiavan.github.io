@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83371004-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>Jiavan 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Jiavan 的博客">
+<meta property="og:url" content="https://jiavan.com/page/3/index.html">
+<meta property="og:site_name" content="Jiavan 的博客">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Jiavan 的博客">
+  
+    <link rel="alternate" href="/atom.xml" title="Jiavan 的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jiavan 的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jiavan.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-JS数组去重的正确姿势？" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/01/JS数组去重的正确姿势？/" class="article-date">
+  <time datetime="2016-02-01T13:54:06.000Z" itemprop="datePublished">2016-02-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/01/JS数组去重的正确姿势？/">JS数组去重的正确姿势？</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="编写uniqueArray"><a href="#编写uniqueArray" class="headerlink" title="编写uniqueArray"></a>编写uniqueArray</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> Unique = &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 双重循环去重</span></span><br><span class="line"><span class="comment">     * @param arr</span></span><br><span class="line"><span class="comment">     * @returns &#123;*&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    dbloop: <span class="function"><span class="keyword">function</span> (<span class="params">arr</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> i,</span><br><span class="line">            j,</span><br><span class="line">            res = [];</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (j = i + <span class="number">1</span>; j &lt; arr.length; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (arr[i] === arr[j]) &#123;</span><br><span class="line">                    arr.splice(i, <span class="number">1</span>);<span class="comment">//当出现相同的元素时，删除重复的元素</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> arr;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 哈希表形式</span></span><br><span class="line"><span class="comment">     * @param arr</span></span><br><span class="line"><span class="comment">     * @returns &#123;Array&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    hash: <span class="function"><span class="keyword">function</span> (<span class="params">arr</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> i,</span><br><span class="line">            hash = &#123;&#125;,</span><br><span class="line">            res = [];</span><br><span class="line"></span><br><span class="line">        <span class="comment">//查询hash对象是否存在当前元素(属性)</span></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!hash[arr[i]]) &#123;</span><br><span class="line">                res.push(arr[i]);</span><br><span class="line">                hash[arr[i]] = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 借助indexOf方法</span></span><br><span class="line"><span class="comment">     * @param arr</span></span><br><span class="line"><span class="comment">     * @returns &#123;Array&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    indexOf: <span class="function"><span class="keyword">function</span> (<span class="params">arr</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> i,</span><br><span class="line">            res = [];</span><br><span class="line"></span><br><span class="line">        <span class="comment">//查询空数组里面是否已经存在这个值，不存在则推入</span></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (res.indexOf(arr[i]) === <span class="number">-1</span>) &#123;</span><br><span class="line">                res.push(arr[i]);</span><br><span class="line">                <span class="built_in">console</span>.log(arr[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = Unique;</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2016/02/01/JS数组去重的正确姿势？/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/02/01/JS数组去重的正确姿势？/" data-id="cjlan6b8o000hktqf0kfe8lj4" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-APIs-chrome-storage" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/30/APIs-chrome-storage/" class="article-date">
+  <time datetime="2016-01-30T06:48:05.000Z" itemprop="datePublished">2016-01-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/chromeapp/">chromeapp</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/30/APIs-chrome-storage/">APIs.chrome.storage</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="chrome-storage"><a href="#chrome-storage" class="headerlink" title="chrome.storage"></a>chrome.storage</h2><table>
+<thead>
+<tr>
+<th>描述</th>
+<th>使用<code>chrome.storage API</code>来存储、检索和跟踪更改用户数据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>可用性</td>
+<td>从Chrome 20开始</td>
+</tr>
+<tr>
+<td>权限</td>
+<td>“storage”</td>
+</tr>
+<tr>
+<td>内容脚本</td>
+<td>完全支持</td>
+</tr>
+<tr>
+<td>更多</td>
+<td><a href="https://developers.google.com/live/shows/7320022/" target="_blank" rel="noopener">Chrome Apps Office Hours: Chrome Storage APIs </a> <br> <a href="https://developers.google.com/live/shows/7320022-1/" target="_blank" rel="noopener">Chrome Apps Office Hours: Storage API Deep Dive</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>这个API进行了优化，以满足特定的存储需求的扩展。它提供了与<code>localStorage API</code>相同的功能，它们之间的差异有以下关键几点：</p>
+<ul>
+<li>用户的数据可以被自动的同步，在<code>Chrome sync</code>机制下(使用<code>using storage.sync</code>)。</li>
+<li>应用程序的内容脚本可以直接访问用户数据而不需要背景页(background.js)。</li>
+<li>尽管用户使用了隐身模式，应用程序的扩展设置仍然可以使用。</li>
+<li>它用于大部分的异步读写操作，因此，他会比阻塞和序列化的<code>localStorage API</code>要快。</li>
+<li>用户的数据可以保存在一个对象中(<code>localStorage API</code>保存的数据是string)。</li>
+<li>企业策略由管理员配置的扩展可以读取(使用存储。管理模式)。</li>
+</ul>
+        
+          <p class="article-more-link">
+            <a href="/2016/01/30/APIs-chrome-storage/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/01/30/APIs-chrome-storage/" data-id="cjlan6b7h0000ktqf8sk71zmn" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chromeapp/">chromeapp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-DOM1级节点层次以及常用方法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/26/DOM1级节点层次以及常用方法/" class="article-date">
+  <time datetime="2016-01-26T15:58:03.000Z" itemprop="datePublished">2016-01-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/26/DOM1级节点层次以及常用方法/">DOM1级节点层次以及常用方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="DOM介绍"><a href="#DOM介绍" class="headerlink" title="DOM介绍"></a>DOM介绍</h3><p><code>DOM(Document Object Model)</code> 文档对象模型，是针对HTML和XML文档的一个API。DOM描绘了一个层次化的节点树，允许开发人员添加、修改、删除页面中的某一部分。DOM脱胎于Netscape以及Microsoft创始的DHTML(动态HTML)，但它现在已经成为表现和操作页面标记的真正的跨平台、语言中立的方式。</p>
+<blockquote>
+<p>注意，IE中所有DOM对象都是以COM对象的形式实现的。这意味着IE中的DOM对象与原生Javascript对象的行为或活动特点并不一致。</p>
+</blockquote>
+<p><strong>W3C DOM标准</strong></p>
+<ul>
+<li>Core DOM 针对任何结构化文档的标准模型。</li>
+<li>XML DOM 针对XML文档的标准模型。</li>
+<li>HTML DOM 针对HTML文档的标准模型。</li>
+</ul>
+        
+          <p class="article-more-link">
+            <a href="/2016/01/26/DOM1级节点层次以及常用方法/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/01/26/DOM1级节点层次以及常用方法/" data-id="cjlan6b8f0009ktqfwc4hh9mx" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DOM/">DOM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js中三种函数定义的差别以及函数声明提升" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/25/js中三种函数定义的差别以及函数声明提升/" class="article-date">
+  <time datetime="2016-01-25T04:11:04.000Z" itemprop="datePublished">2016-01-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/25/js中三种函数定义的差别以及函数声明提升/">js中三种函数定义的差别以及函数声明提升</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Function类型"><a href="#Function类型" class="headerlink" title="Function类型"></a>Function类型</h3><p>在ECMAScript中函数实际上是对象，每个函数都是Function类型的实例，且与其他引用类型一样具有属性和方法，由于函数的本质是对象，那么函数名应该是指向对象的指针。一个对象可以有多个引用，所以一个函数可以有多个函数名(指针)。函数的参数也不是必要的（有arguments对象），也没有函数签名的说法，这也是为什么js的函数不能重载。<br><img src="/images/function-stack-model.png" alt="function"></p>
+        
+          <p class="article-more-link">
+            <a href="/2016/01/25/js中三种函数定义的差别以及函数声明提升/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/01/25/js中三种函数定义的差别以及函数声明提升/" data-id="cjlan6b9h001ektqfa1p0dr0v" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Basics-Chrome-App的体系结构" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/06/Basics-Chrome-App的体系结构/" class="article-date">
+  <time datetime="2016-01-05T22:10:15.000Z" itemprop="datePublished">2016-01-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/chromeapp/">chromeapp</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/06/Basics-Chrome-App的体系结构/">Basics.Chrome App的体系结构</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Chrome Apps紧密结合与用户的操作系统.设计他们的目的是为了作为一个单独的Tab独立于浏览器运行,在离线环境或则在网络连接性很差的情况下比起经典的web环境中还能具有强大的功能. 应用程序容器、编程和安全模型都满足这些Chrome应用程序的需求。</p>
+<h4 id="App容器模型"><a href="#App容器模型" class="headerlink" title="App容器模型"></a>App容器模型</h4><p>应用程序容器描述了Chrome应用程序的视觉外观和加载行为. Chrome Apps与传统的web页面看起来不一样是因为app容器不显示任何传统网页中的UI控件.它只显示一个矩形的空白区域, 这允许应用程序融合与“本地”系统上的应用程序, 而且可以防止用户通过手动更改程序的URL地址来混乱App的逻辑.</p>
+<p>Chrome App的加载和不同的web app(web页面)不一样. 加载相同类型的内容: HTML和CSS, JavaScript文件, 然而, Chrome App是加载到app容器, 而不是在浏览器标签, 而且Chrome App必须要加载文件, 且文件资源来自本地, 这迫使所有Chrome App离线时至少有最低限度功能, 它还提供了一个地方执行更严格的安全措施。<br><img src="/images/chrome-app-container.png" alt="chrome-app-container.png"></p>
+        
+          <p class="article-more-link">
+            <a href="/2016/01/06/Basics-Chrome-App的体系结构/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/01/06/Basics-Chrome-App的体系结构/" data-id="cjlan6b7p0001ktqf0rze3nf3" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chromeapp/">chromeapp</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Basics-Chrome-App的内容安全策略-CSP" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/06/Basics-Chrome-App的内容安全策略-CSP/" class="article-date">
+  <time datetime="2016-01-05T22:03:17.000Z" itemprop="datePublished">2016-01-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/chromeapp/">chromeapp</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/06/Basics-Chrome-App的内容安全策略-CSP/">Basics.Chrome App的内容安全策略(CSP)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如果你不熟悉内容安全策略CSP(Content Security Policy), 这里有一个<a href="http://www.html5rocks.com/en/tutorials/security/content-security-policy/" target="_blank" rel="noopener">关于CSP的介绍</a>, 该文档覆盖更为广泛的网络平台对CSP的看法. Chrome App的内容安全策略不是那么的灵活, 你也应该阅读<a href="https://developer.chrome.com/extensions/contentSecurityPolicy" target="_blank" rel="noopener">Chrome扩展应用的内容安全策略</a>, 它是作为Chrome App内容安全策略的基础. 为了简洁起见,我们在这里不要重复相同的信息.</p>
+<p>CSP是一种为了减轻跨站点脚本的安全策略, 我们都知道, 跨站点脚本是不好的. 我们不会试图说服你, CSP是一个温暖而舒适的新的策略. 涉及的工作: 你需要学习如何使用不同的方式来做基本任务.</p>
+<p>本文档的目的是为了告诉你什么是Chrome App中的CSP. 你该如何的去遵守他, 以及你可以通过遵守CSP来完成基本的任务.</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/01/06/Basics-Chrome-App的内容安全策略-CSP/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/01/06/Basics-Chrome-App的内容安全策略-CSP/" data-id="cjlan6b7z0004ktqfstyvky1w" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chromeapp/">chromeapp</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-LibGDX中图元Mesh的使用以及参考示例" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/08/05/LibGDX中图元Mesh的使用以及参考示例/" class="article-date">
+  <time datetime="2015-08-05T15:48:36.000Z" itemprop="datePublished">2015-08-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/05/LibGDX中图元Mesh的使用以及参考示例/">LibGDX中图元Mesh的使用以及参考示例</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这篇文章可能不完整</p>
+</blockquote>
+<p>好吧最近撸码撸得想吐，什么都不想干了，抽点时间写写博客。以下是之前在libGDX学习中遇到的一些关于 Mesh 问题。关于 Mesh (图元)在libgdx中的使用，本来对于国内libgdx的开发资料比较缺乏，之前也看了网上的一些教程，感觉很对都没有写清楚（还是我理解能力太差？）或者是把它讲得比较复杂，难以理解。浏览了部分资料后自己写了一个demo。 本文采用libGDX-0.99版本，1.x版本API可能会有变化。</p>
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><blockquote>
+<p>qute: A Mesh consists of vertices and optionally indices which specify which vertices define a triangle. Each vertex is composed of attributes such as position, normal, color or texture coordinate. Note that not all of this attributes must be given, except for position which is non-optional. Each attribute has an alias which is used when rendering a Mesh in OpenGL ES 2.0. The alias is used to bind a specific vertex attribute to a shader attribute. The shader source and the alias of the attribute must match exactly for this to work.</p>
+</blockquote>
+<p>大致说明了一个mesh包含了多个vertice即顶点，每个顶点都有各自的属性，包括颜色、位置、纹理等等。平时常用的构造函数就是:</p>
+        
+          <p class="article-more-link">
+            <a href="/2015/08/05/LibGDX中图元Mesh的使用以及参考示例/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2015/08/05/LibGDX中图元Mesh的使用以及参考示例/" data-id="cjlan6b8u000oktqf6s0fx73o" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/game-dev/">game-dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/libgdx/">libgdx</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chromeapp/">chromeapp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/css/">css</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding-is-interesting/">Coding is interesting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSQL/">NoSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/block-chain/">block-chain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chromeapp/">chromeapp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dom/">dom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flux/">flux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game-dev/">game-dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gcd/">gcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http/">http</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libgdx/">libgdx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltc/">ltc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pow/">pow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/">story</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端自动化/">前端自动化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序/">排序</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Coding-is-interesting/" style="font-size: 10px;">Coding is interesting</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/NoSQL/" style="font-size: 10px;">NoSQL</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/block-chain/" style="font-size: 10px;">block-chain</a> <a href="/tags/c/" style="font-size: 18px;">c</a> <a href="/tags/chromeapp/" style="font-size: 16px;">chromeapp</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/dom/" style="font-size: 10px;">dom</a> <a href="/tags/flux/" style="font-size: 12px;">flux</a> <a href="/tags/game-dev/" style="font-size: 10px;">game-dev</a> <a href="/tags/gcd/" style="font-size: 10px;">gcd</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/libgdx/" style="font-size: 10px;">libgdx</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/ltc/" style="font-size: 10px;">ltc</a> <a href="/tags/math/" style="font-size: 14px;">math</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/pow/" style="font-size: 10px;">pow</a> <a href="/tags/react/" style="font-size: 12px;">react</a> <a href="/tags/redux/" style="font-size: 12px;">redux</a> <a href="/tags/story/" style="font-size: 10px;">story</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/前端自动化/" style="font-size: 10px;">前端自动化</a> <a href="/tags/排序/" style="font-size: 10px;">排序</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/01/10/awk-入坑指北/">awk 入坑指北</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/12/关于自由软件与开源协议/">关于自由软件与开源协议</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/10/CPU挖矿-利用VPS挖莱特币/">CPU挖矿-利用VPS挖莱特币</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/30/See-U-2016/">See U 2016</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/26/Redux中间件与异步Action/">Redux中间件与异步Action</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Jiavan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83371004-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>浅析JS中的自定义事件 | Jiavan 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在JS中事件是与浏览器进行交互的主要途径，事件与DOM进行交互是最常见的方式，但是也可以用于非DOM代码中，实现自定义的事件。自定义事件的主要概念是创建一个管理事件的对象，用来删除，增加，触发事件等。事件是瞬间触发的，所以自定义事件也一样，当程序执行到某处时，触发了用户注册的事件处理程序完成这个过程。 在下面我们实现了一个自定义的事件管理类，以及一个弹出层对话框的Dialog组件，这个组件继承了事">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅析JS中的自定义事件">
+<meta property="og:url" content="https://jiavan.com/2016/04/04/浅析JS中的自定义事件/index.html">
+<meta property="og:site_name" content="Jiavan 的博客">
+<meta property="og:description" content="在JS中事件是与浏览器进行交互的主要途径，事件与DOM进行交互是最常见的方式，但是也可以用于非DOM代码中，实现自定义的事件。自定义事件的主要概念是创建一个管理事件的对象，用来删除，增加，触发事件等。事件是瞬间触发的，所以自定义事件也一样，当程序执行到某处时，触发了用户注册的事件处理程序完成这个过程。 在下面我们实现了一个自定义的事件管理类，以及一个弹出层对话框的Dialog组件，这个组件继承了事">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://jiavan.com/2016/04/04/浅析JS中的自定义事件/images/js-event-target.png">
+<meta property="og:updated_time" content="2018-08-26T09:15:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浅析JS中的自定义事件">
+<meta name="twitter:description" content="在JS中事件是与浏览器进行交互的主要途径，事件与DOM进行交互是最常见的方式，但是也可以用于非DOM代码中，实现自定义的事件。自定义事件的主要概念是创建一个管理事件的对象，用来删除，增加，触发事件等。事件是瞬间触发的，所以自定义事件也一样，当程序执行到某处时，触发了用户注册的事件处理程序完成这个过程。 在下面我们实现了一个自定义的事件管理类，以及一个弹出层对话框的Dialog组件，这个组件继承了事">
+<meta name="twitter:image" content="https://jiavan.com/2016/04/04/浅析JS中的自定义事件/images/js-event-target.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Jiavan 的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jiavan 的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jiavan.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-浅析JS中的自定义事件" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/04/浅析JS中的自定义事件/" class="article-date">
+  <time datetime="2016-04-03T18:22:16.000Z" itemprop="datePublished">2016-04-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      浅析JS中的自定义事件
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="./images/js-event-target.png" alt="./images/js-event-target.png"><br>在JS中事件是与浏览器进行交互的主要途径，事件与DOM进行交互是最常见的方式，但是也可以用于非DOM代码中，实现自定义的事件。自定义事件的主要概念是创建一个管理事件的对象，用来删除，增加，触发事件等。事件是瞬间触发的，所以自定义事件也一样，当程序执行到某处时，触发了用户注册的事件处理程序完成这个过程。</p>
+<p>在下面我们实现了一个自定义的事件管理类，以及一个弹出层对话框的Dialog组件，这个组件继承了事件类里的方法，通过给Dialog实例注册事件以及用户的操作进行触发，完成了自定义事件大概的过程。</p>
+<p>下面的内容涉及到了JS中prototype chain，继承模式等相关姿势，不太熟悉的同学可以先看看JS面向对象部分相关的内容。</p>
+<a id="more"></a>
+<h1 id="先上代码"><a href="#先上代码" class="headerlink" title="先上代码"></a>先上代码</h1><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">EventTarget</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>._handlers = &#123;&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">EventTarget.prototype = &#123;</span><br><span class="line">    <span class="keyword">constructor</span>: EventTarget,</span><br><span class="line">    addEvent: function (type, fn) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> type === <span class="string">'string'</span> &amp;&amp; <span class="keyword">typeof</span> fn === <span class="string">'function'</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="keyword">this</span>._handlers[type] === <span class="string">'undefined'</span>) &#123;</span><br><span class="line">                <span class="keyword">this</span>._handlers[type] = [];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">this</span>._handlers[type].push(fn);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    fireEvent: <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!event.target) &#123;</span><br><span class="line">            event.target = <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>._handlers[event.type] <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">            <span class="keyword">var</span> handlers = <span class="keyword">this</span>._handlers[event.type];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; handlers.length; i++) &#123;</span><br><span class="line">                handlers[i](event);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    removeEvent: <span class="function"><span class="keyword">function</span> (<span class="params">type, handler</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>._handlers[type] <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">            <span class="keyword">var</span> handlers = <span class="keyword">this</span>._handlers[type];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; handlers.length; i++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (handlers[i] === handler) &#123;</span><br><span class="line">                    handlers.splice(i, <span class="number">1</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这可以看成是一个工具类，写过DOM事件管理类的同学应该觉得比较熟悉，通过封装addEventListener或者attachEvent来进行事件注册等等。这里也一样只是进行了简单的封装。</p>
+<p>_handlers用于存放事件处理程序，addEvent注册事件，也是注册事件类型，如果没有该事件类型，那么我们就创建一个自定义类型的事件，并把事件处理程序push到该类型的数组，所以一种type可能对应了多个事件处理程序，fireEvent通过传入事件对象，以及event.type来进行事件触发(执行对应的函数)，removeEvent就是删除对应的事件处理程序。</p>
+<h1 id="那么用途呢？"><a href="#那么用途呢？" class="headerlink" title="那么用途呢？"></a>那么用途呢？</h1><p>下面我们定义了一个Dialog组件并继承了EventTarget就能绑定自定义的事件啦。。。<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extend</span>(<span class="params">subType, supType</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> proto = <span class="built_in">Object</span>(supType.prototype);</span><br><span class="line">    subType.prototype = proto;</span><br><span class="line">    subType.constructor = subType;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Dialog</span>(<span class="params">id</span>) </span>&#123;</span><br><span class="line">    EventTarget.call(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">this</span>.dialog = <span class="built_in">document</span>.getElementById(id);</span><br><span class="line">    <span class="keyword">var</span> that = <span class="keyword">this</span>;</span><br><span class="line">    <span class="built_in">document</span>.querySelector(<span class="string">'#close'</span>).onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        that.close();</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">extend(Dialog, EventTarget);</span><br><span class="line"></span><br><span class="line">Dialog.prototype.show = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.dialog.style.display = <span class="string">'block'</span>;</span><br><span class="line">    <span class="keyword">this</span>.fireEvent(&#123;</span><br><span class="line">        type: <span class="string">'showPageCover'</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Dialog.prototype.close = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.dialog.style.display = <span class="string">'none'</span>;</span><br><span class="line">    <span class="keyword">this</span>.fireEvent(&#123;</span><br><span class="line">        type: <span class="string">'closePageCover'</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">openDialog</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> dialog = <span class="keyword">new</span> Dialog(<span class="string">'dialog'</span>);</span><br><span class="line">    dialog.addEvent(<span class="string">'closePageCover'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">document</span>.querySelector(<span class="string">'.page-cover'</span>).style.display = <span class="string">'none'</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    dialog.addEvent(<span class="string">'showPageCover'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">document</span>.querySelector(<span class="string">'.page-cover'</span>).style.display = <span class="string">'block'</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    dialog.show();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里是组件的代码，以及绑定自定义的事件对遮罩层隐藏/显示，因为遮罩层是不属于Dialog组件的，所以如果将遮罩层的代码写到Dialog中，这样就会造成代码耦合度较高的情况，通过自定事件，将遮罩层处理的事件处理程序注册到Dialog，实现松散耦合。</p>
+<p>html页面代码如下：<br><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">        * &#123;</span></span><br><span class="line"><span class="undefined">            padding: 0;</span></span><br><span class="line"><span class="undefined">            margin: 0;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="css">        <span class="selector-class">.dialog</span> &#123;</span></span><br><span class="line"><span class="undefined">            width: 300px;</span></span><br><span class="line"><span class="undefined">            height: 200px;</span></span><br><span class="line"><span class="css">            <span class="selector-tag">background-color</span>: <span class="selector-id">#666</span>;</span></span><br><span class="line"><span class="undefined">            position: absolute;</span></span><br><span class="line"><span class="undefined">            top: 50%;</span></span><br><span class="line"><span class="undefined">            left: 50%;</span></span><br><span class="line"><span class="undefined">            margin-left: -150px;</span></span><br><span class="line"><span class="undefined">            margin-top: -100px;</span></span><br><span class="line"><span class="undefined">            border-radius: 5px;</span></span><br><span class="line"><span class="undefined">            display: none;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="css">        <span class="selector-class">.dialog</span> <span class="selector-id">#close</span> &#123;</span></span><br><span class="line"><span class="undefined">            width: 20px;</span></span><br><span class="line"><span class="undefined">            height: 20px;</span></span><br><span class="line"><span class="undefined">            float: right;</span></span><br><span class="line"><span class="undefined">            cursor: pointer;</span></span><br><span class="line"><span class="undefined">            background-color: red;</span></span><br><span class="line"><span class="undefined">            border: 0;</span></span><br><span class="line"><span class="undefined">            position: relative;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="css">        <span class="selector-class">.dialog</span> <span class="selector-class">.title</span> &#123;</span></span><br><span class="line"><span class="undefined">            height: 20px;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="css">        <span class="selector-class">.page-cover</span> &#123;</span></span><br><span class="line"><span class="undefined">            width: 100%;</span></span><br><span class="line"><span class="undefined">            height: 100%;</span></span><br><span class="line"><span class="undefined">            position: absolute;</span></span><br><span class="line"><span class="css">            <span class="selector-tag">background-color</span>: <span class="selector-id">#999</span>;</span></span><br><span class="line"><span class="css">            <span class="selector-tag">opacity</span>: 0<span class="selector-class">.4</span>;</span></span><br><span class="line"><span class="undefined">            display: none;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"page-cover"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">value</span>=<span class="string">"Click"</span> <span class="attr">id</span>=<span class="string">"button"</span> <span class="attr">onclick</span>=<span class="string">"openDialog()"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">value</span>=<span class="string">"Click Clear"</span> <span class="attr">onclick</span>=<span class="string">"clearClose()"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"dialog"</span> <span class="attr">id</span>=<span class="string">"dialog"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">""</span> <span class="attr">id</span>=<span class="string">"close"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"title"</span>&gt;</span>title<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"content"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"script.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<hr>
+<blockquote>
+<p>参考文章：</p>
+</blockquote>
+<blockquote>
+<p><a href="http://www.jb51.net/article/33697.htm" target="_blank" rel="noopener">http://www.jb51.net/article/33697.htm</a><br><a href="http://www.jb51.net/article/33698.htm" target="_blank" rel="noopener">http://www.jb51.net/article/33698.htm</a><br><a href="http://baike.baidu.com/view/1854779.htm" target="_blank" rel="noopener">http://baike.baidu.com/view/1854779.htm</a><br><a href="http://www.zhangxinxu.com/wordpress/2012/04/js-dom%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6/" target="_blank" rel="noopener">http://www.zhangxinxu.com/wordpress/2012/04/js-dom%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6/</a><br><a href="http://www.jb51.net/article/40978.htm" target="_blank" rel="noopener">http://www.jb51.net/article/40978.htm</a></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/04/04/浅析JS中的自定义事件/" data-id="cjlan6ba50023ktqfzstch6er" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/16/XSS持久型攻击实例-向学校图书馆网站页面注入JS/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          XSS持久型攻击实例--向学校图书馆网站页面注入JS
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/27/优雅的清除浮动/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">优雅的清除浮动</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chromeapp/">chromeapp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/css/">css</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding-is-interesting/">Coding is interesting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSQL/">NoSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/block-chain/">block-chain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chromeapp/">chromeapp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dom/">dom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flux/">flux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game-dev/">game-dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gcd/">gcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http/">http</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libgdx/">libgdx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltc/">ltc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pow/">pow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/">story</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端自动化/">前端自动化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序/">排序</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Coding-is-interesting/" style="font-size: 10px;">Coding is interesting</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/NoSQL/" style="font-size: 10px;">NoSQL</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/block-chain/" style="font-size: 10px;">block-chain</a> <a href="/tags/c/" style="font-size: 18px;">c</a> <a href="/tags/chromeapp/" style="font-size: 16px;">chromeapp</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/dom/" style="font-size: 10px;">dom</a> <a href="/tags/flux/" style="font-size: 12px;">flux</a> <a href="/tags/game-dev/" style="font-size: 10px;">game-dev</a> <a href="/tags/gcd/" style="font-size: 10px;">gcd</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/libgdx/" style="font-size: 10px;">libgdx</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/ltc/" style="font-size: 10px;">ltc</a> <a href="/tags/math/" style="font-size: 14px;">math</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/pow/" style="font-size: 10px;">pow</a> <a href="/tags/react/" style="font-size: 12px;">react</a> <a href="/tags/redux/" style="font-size: 12px;">redux</a> <a href="/tags/story/" style="font-size: 10px;">story</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/前端自动化/" style="font-size: 10px;">前端自动化</a> <a href="/tags/排序/" style="font-size: 10px;">排序</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/01/10/awk-入坑指北/">awk 入坑指北</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/12/关于自由软件与开源协议/">关于自由软件与开源协议</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/10/CPU挖矿-利用VPS挖莱特币/">CPU挖矿-利用VPS挖莱特币</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/30/See-U-2016/">See U 2016</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/26/Redux中间件与异步Action/">Redux中间件与异步Action</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Jiavan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

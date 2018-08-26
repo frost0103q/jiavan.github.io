@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83371004-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>Yeoman/Bower/Gulp前端自动化 | Jiavan 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="bower，web包管理器安装npm install -g bower，官方页面http://bower.io 比如利用bower安装jquery或者bootstrap，可以使用一下命令:bower install jquerybower install bootstrap 会从bower包管理器中查找已经在bower上注册的要安装的组件，找到以后去github上找到最新版本的下载地址，下载的组">
+<meta name="keywords" content="javascript,前端自动化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Yeoman&#x2F;Bower&#x2F;Gulp前端自动化">
+<meta property="og:url" content="https://jiavan.com/2016/03/04/Yeoman-Bower-Gulp前端自动化/index.html">
+<meta property="og:site_name" content="Jiavan 的博客">
+<meta property="og:description" content="bower，web包管理器安装npm install -g bower，官方页面http://bower.io 比如利用bower安装jquery或者bootstrap，可以使用一下命令:bower install jquerybower install bootstrap 会从bower包管理器中查找已经在bower上注册的要安装的组件，找到以后去github上找到最新版本的下载地址，下载的组">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://jiavan.com/images/font-end-auto-tools.jpg">
+<meta property="og:updated_time" content="2018-08-26T09:15:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Yeoman&#x2F;Bower&#x2F;Gulp前端自动化">
+<meta name="twitter:description" content="bower，web包管理器安装npm install -g bower，官方页面http://bower.io 比如利用bower安装jquery或者bootstrap，可以使用一下命令:bower install jquerybower install bootstrap 会从bower包管理器中查找已经在bower上注册的要安装的组件，找到以后去github上找到最新版本的下载地址，下载的组">
+<meta name="twitter:image" content="https://jiavan.com/images/font-end-auto-tools.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Jiavan 的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jiavan 的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jiavan.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Yeoman-Bower-Gulp前端自动化" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/04/Yeoman-Bower-Gulp前端自动化/" class="article-date">
+  <time datetime="2016-03-04T08:26:13.000Z" itemprop="datePublished">2016-03-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Yeoman/Bower/Gulp前端自动化
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/images/font-end-auto-tools.jpg" alt="font-end-auto-tools.jpg"></p>
+<h3 id="bower，web包管理器"><a href="#bower，web包管理器" class="headerlink" title="bower，web包管理器"></a>bower，web包管理器</h3><p>安装<code>npm install -g bower</code>，官方页面<a href="http://bower.io" target="_blank" rel="noopener">http://bower.io</a></p>
+<p>比如利用bower安装jquery或者bootstrap，可以使用一下命令:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">bower install jquery</span><br><span class="line">bower install bootstrap</span><br></pre></td></tr></table></figure></p>
+<p>会从bower包管理器中查找已经在bower上注册的要安装的组件，找到以后去github上找到最新版本的下载地址，下载的组件将会被保存在目录下的bower_components目录下。</p>
+<p>也可以用过github短语的形式进行安装，比如jquery在github的地址是jquery/jquery下，就能通过下面的方式安装：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">bower install jquery/jquery</span><br><span class="line">//注意，bower安装组件的时候，会将组件下载在bower当前命令执行的目录环境下的bower_components目录下</span><br></pre></td></tr></table></figure></p>
+<p>除了用上面的两种方式，bower还可以通过完整的github仓库地址进行安装，如：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">bower install https://github.com/jquery/jquery.git</span><br></pre></td></tr></table></figure></p>
+<p>另外bower还可以直接通过url进行安装：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">bower install http://sinaapp.com/jquery/1.7.2/jquery.js</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<hr>
+<p>总结：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># installs the project dependencies listed in bower.json</span><br><span class="line">$ bower install</span><br><span class="line"># registered package</span><br><span class="line">$ bower install jquery</span><br><span class="line"># GitHub shorthand</span><br><span class="line">$ bower install desandro/masonry</span><br><span class="line"># Git endpoint</span><br><span class="line">$ bower install git://github.com/user/package.git</span><br><span class="line"># URL</span><br><span class="line">$ bower install http://example.com/script.js</span><br></pre></td></tr></table></figure></p>
+<p>bower可很方便的安装和管理前端开发的一些框架和组件，但是单独使用bower也有局限性，在页面中使用bower安装的组件的使用，都需要写上bower_components的路径，可以结合grunt等工具来解决这个问题。</p>
+<hr>
+<h3 id="Yeoman，整合最佳实践和工具，加速和方便开发"><a href="#Yeoman，整合最佳实践和工具，加速和方便开发" class="headerlink" title="Yeoman，整合最佳实践和工具，加速和方便开发"></a>Yeoman，整合最佳实践和工具，加速和方便开发</h3><p>安装<code>npm install -g yo</code>，官方页面<a href="http://yeoman.io/" target="_blank" rel="noopener">http://yeoman.io/</a></p>
+<p>安装一个generator（生成器）：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//之前通过npm安装angular生成器</span><br><span class="line">npm install generator-angular</span><br><span class="line"></span><br><span class="line">//通过yoman建立一个angular项目</span><br><span class="line">yo angular testangular</span><br></pre></td></tr></table></figure></p>
+<p>注意，yoman生成器生成的项目本身是基于Node构建的项目。</p>
+<h4 id="package-json，dependencies与devDependencies"><a href="#package-json，dependencies与devDependencies" class="headerlink" title="package.json，dependencies与devDependencies"></a>package.json，dependencies与devDependencies</h4><p>它们都是项目所需要依赖的包，devDependencies是我们在开发过程中需要依赖的包，dependencies是项目在生产环境中需要依赖的包。</p>
+<p>版本号的约定：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">"devDependencies": &#123;</span><br><span class="line">	"grunt": "^0.7.3"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>尖括号是一个比较宽松的对版本的限制，它只限制主版号，主板本号不变时，npm会自动安装新的版本。如果是：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">"devDependencies": &#123;</span><br><span class="line">	"grunt": "～0.7.3"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>波浪号是一个严格的版本要求限制，如果第二位版本号改变了npm就不会更新。</p>
+<hr>
+<h3 id="Gulp，前端构建系统"><a href="#Gulp，前端构建系统" class="headerlink" title="Gulp，前端构建系统"></a>Gulp，前端构建系统</h3><h4 id="task"><a href="#task" class="headerlink" title="task"></a>task</h4><p>定义gulp任务的文件gulpfile.js，通过gulp命令来运行：<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> gulp = <span class="built_in">require</span>(<span class="string">'gulp'</span>);</span><br><span class="line"><span class="keyword">var</span> uglify = <span class="built_in">require</span>(<span class="string">'gulp-uglify'</span>);</span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'minify'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    gulp.src(<span class="string">'js/app.js'</span>)</span><br><span class="line">        .pipe(uglify())</span><br><span class="line">        .pipe(gulp.dest(<span class="string">'build'</span>))</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//gulp minify</span></span><br></pre></td></tr></table></figure></p>
+<p>这里定义了一个名为minify的任务，为了压缩指定目录文件的js代码。task函数有两个参数，第一个是task的名称，第二个是回调函数。<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">gulp.task(<span class="string">'test'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'this is gulp'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>task有可能也是一系列任务，假设要定义一个任务build来执行css、js、imgs三个任务，我们可以指定一个任务数组而不是函数来完成。<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">gulp.task(<span class="string">'build'</span>, [<span class="string">'css'</span>, <span class="string">'js'</span>, <span class="string">'imgs'</span>]);</span><br></pre></td></tr></table></figure></p>
+<p>这些任务不是同时进行的，所以不能认为在js任务开始的时候css任务已经结束了，有可能css还没有完成，为了确保一个任务在另一个任务执行前已经结束，可以将函数和任务组结合起来指定其依赖关系。例如，定义一个css任务，在执行前需要检查greet任务是否已经执行完毕，可以像下面这样写：<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">gulp.task(<span class="string">'css'</span>, [<span class="string">'greet'</span>], <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">//deal</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>这样在执行css任务时，gulp会先执行greet任务，然后再它结束后执行css回调。</p>
+<h4 id="default-task"><a href="#default-task" class="headerlink" title="default task"></a>default task</h4><p>可以定义一个在gulp开始运行的时候默认执行的任务，并将这个任务命名为default。<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">gulp.task(<span class="string">'default'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">//your default task</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h4 id="src"><a href="#src" class="headerlink" title="src"></a>src</h4><p>gulp.src()函数用字符串匹配一个文件或者一个文件编号，称为glob，然后创建一个对象流来代表这些文件。src方法输入一个glob（匹配一个或者多个文件）或者glob数组，然后返回一个可以传递给插件的数据流。<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">gulp.src([<span class="string">'js/*/*.js'</span>, <span class="string">'!js/*/*.min.js'</span>])</span><br><span class="line"><span class="comment">//匹配js目录下没有被压缩的文件</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="plugins"><a href="#plugins" class="headerlink" title="plugins"></a>plugins</h4><p>gulp拥有许多的插件，而且调用方法也相同（通过传递文件对象流），它们通常会对这些文件进行修改，然后返回新的文件对象流给下一个插件。</p>
+<p>常用的一些插件如jshint，uglify，concat（将所有文件合合并到一个文件）。</p>
+<h4 id="gulp-load-plugins"><a href="#gulp-load-plugins" class="headerlink" title="gulp-load-plugins"></a>gulp-load-plugins</h4><p>gulp-load-plugins模块能自动的从package.json中加载任意gulp插件然后把他们附加到一个对象上：<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> gulpLoadPlugins = <span class="built_in">require</span>(<span class="string">'gulp-load-plugins'</span>);</span><br><span class="line"><span class="keyword">var</span> plugins = gulpLoadPlugins();</span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'js'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> gulp.src(<span class="string">'js/*.js'</span>)</span><br><span class="line">		.pipe(plugins.uglify())</span><br><span class="line">		.pipe(concat(<span class="string">'app.js'</span>))</span><br><span class="line">		.pipe(gulp.dest(<span class="string">'build'</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>在执行上面的代码后，插件对象就已经包含了插件，package.json文件如下：<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="string">"devDependencies"</span>: &#123;</span><br><span class="line">		<span class="string">"gulp-concat"</span>: <span class="string">"~2.2.0"</span>,</span><br><span class="line">		<span class="string">"gulp-uglify"</span>: <span class="string">"~0.2.1"</span>,</span><br><span class="line">		<span class="string">"gulp-jshint"</span>: <span class="string">"~1.5.1"</span>,</span><br><span class="line">		<span class="string">"gulp"</span>: <span class="string">"~3.5.6"</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>后续发布的gulp-load-plugins还提供了<strong>延迟加载</strong>功能，提高了插件的性能，只有在执行任务的时候才会加载所用的插件，其它部相关的插件不会被加载。</p>
+<h5 id="watching-files"><a href="#watching-files" class="headerlink" title="watching files"></a>watching files</h5><p>gulp可以监听文件的修改动态，文件在被改动的时候执行一个或多个任务。这个功能十分方便。你可以修改less文件，gulp会自动的转换为css文件并更新浏览器。</p>
+<p>使用gulp中的watch方法可以监听文件，它接受一个glob或者glob数组和src一样，以及一个任务组来执行回调。</p>
+<h5 id="gulp实践"><a href="#gulp实践" class="headerlink" title="gulp实践"></a>gulp实践</h5><p>首先安装gulp及其依赖：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install --save-dev gulp</span><br><span class="line">npm install --save-dev gulp-concat</span><br><span class="line">npm install --save-dev gulp-uglify</span><br><span class="line">npm install --save-dev gulp-rename</span><br></pre></td></tr></table></figure></p>
+<p>在项目目录下新建gulpfile.js文件并输入以下内容：<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> gulpLloadPlugins = <span class="built_in">require</span>(<span class="string">'gulp-load-plugins'</span>);</span><br><span class="line"><span class="keyword">var</span> gulp = <span class="built_in">require</span>(<span class="string">'gulp'</span>);</span><br><span class="line"><span class="keyword">var</span> plugins = gulpLloadPlugins();</span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'default'</span>, [<span class="string">'js'</span>]);</span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'js'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    gulp.src(<span class="string">'js/*.js'</span>)</span><br><span class="line">    .pipe(plugins.concat(<span class="string">'app.js'</span>))</span><br><span class="line">    .pipe(gulp.dest(<span class="string">'dist/js'</span>))</span><br><span class="line">    .pipe(plugins.uglify())</span><br><span class="line">    .pipe(plugins.rename(<span class="string">'app.min.js'</span>))</span><br><span class="line">    .pipe(gulp.dest(<span class="string">'dist/js/'</span>));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'watcher'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    gulp.watch(<span class="string">'js/*.js'</span>, [<span class="string">'js'</span>]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>在命令行中输入<code>gulp js</code>，就会启动js任务，首先找到js目录下的所有js文件，然后合并为app.js文件输出到dest/js目录下然后进行js代码压缩、重命名最后输出到dist/js目录下。</p>
+<p>watcher任务可以监视js目录下的所有js文件，当文件发生了改变时会调用js任务重复上面的步骤。</p>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><p>gulp相比于grunt来说是要简单了很多，没有这么繁琐的配置步骤，文件对象流实现，效率更高。与学弟也有一些探讨，包括yoeman/bower的使用，类似与yoeman这种东西用构建器可以快速的完成一个如angular项目的构建，但是个人觉得并不是很好用，到底怎么样还是仁者见仁智者见智吧，不过bower还是挺好用的。</p>
+<hr>
+<p>参考文章</p>
+<ol start="0">
+<li><a href="http://www.w3ctech.com/topic/134" target="_blank" rel="noopener">http://www.w3ctech.com/topic/134</a></li>
+<li><a href="http://www.gulpjs.com.cn/docs/getting-started/" target="_blank" rel="noopener">http://www.gulpjs.com.cn/docs/getting-started/</a></li>
+<li><a href="https://segmentfault.com/a/1190000000372547" target="_blank" rel="noopener">https://segmentfault.com/a/1190000000372547</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/03/04/Yeoman-Bower-Gulp前端自动化/" data-id="cjlan6b9b0018ktqfntewl662" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前端自动化/">前端自动化</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/03/05/ES中理解原型以及对象创建方式/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          ES中理解原型以及对象创建方式
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/02/17/NoSQL与CAP定理简介/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">NoSQL与CAP定理简介</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chromeapp/">chromeapp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/css/">css</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding-is-interesting/">Coding is interesting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSQL/">NoSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/block-chain/">block-chain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chromeapp/">chromeapp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dom/">dom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flux/">flux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game-dev/">game-dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gcd/">gcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http/">http</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libgdx/">libgdx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltc/">ltc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pow/">pow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/">story</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端自动化/">前端自动化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序/">排序</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Coding-is-interesting/" style="font-size: 10px;">Coding is interesting</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/NoSQL/" style="font-size: 10px;">NoSQL</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/block-chain/" style="font-size: 10px;">block-chain</a> <a href="/tags/c/" style="font-size: 18px;">c</a> <a href="/tags/chromeapp/" style="font-size: 16px;">chromeapp</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/dom/" style="font-size: 10px;">dom</a> <a href="/tags/flux/" style="font-size: 12px;">flux</a> <a href="/tags/game-dev/" style="font-size: 10px;">game-dev</a> <a href="/tags/gcd/" style="font-size: 10px;">gcd</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/libgdx/" style="font-size: 10px;">libgdx</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/ltc/" style="font-size: 10px;">ltc</a> <a href="/tags/math/" style="font-size: 14px;">math</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/pow/" style="font-size: 10px;">pow</a> <a href="/tags/react/" style="font-size: 12px;">react</a> <a href="/tags/redux/" style="font-size: 12px;">redux</a> <a href="/tags/story/" style="font-size: 10px;">story</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/前端自动化/" style="font-size: 10px;">前端自动化</a> <a href="/tags/排序/" style="font-size: 10px;">排序</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/01/10/awk-入坑指北/">awk 入坑指北</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/12/关于自由软件与开源协议/">关于自由软件与开源协议</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/10/CPU挖矿-利用VPS挖莱特币/">CPU挖矿-利用VPS挖莱特币</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/30/See-U-2016/">See U 2016</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/26/Redux中间件与异步Action/">Redux中间件与异步Action</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Jiavan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

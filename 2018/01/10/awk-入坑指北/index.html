@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83371004-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>awk 入坑指北 | Jiavan 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="awk（/ɔːk/） 是 *nix 下一种强大的文本处理工具，其名称取自三位作者 Alfred Aho，Peter Jay Weinberger，Brian Wilson Kernighan。awk 提供的功能包括不仅限于正则匹配、流控制、算术运算、甚至于函数等编程语言具备的一些特性。它发行于 1977 年，已经超过了 40 岁堪称古董级软件。为了更让人能直接明白它的用途，我把它称为是命令行下的">
+<meta name="keywords" content="awk,linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="awk 入坑指北">
+<meta property="og:url" content="https://jiavan.com/2018/01/10/awk-入坑指北/index.html">
+<meta property="og:site_name" content="Jiavan 的博客">
+<meta property="og:description" content="awk（/ɔːk/） 是 *nix 下一种强大的文本处理工具，其名称取自三位作者 Alfred Aho，Peter Jay Weinberger，Brian Wilson Kernighan。awk 提供的功能包括不仅限于正则匹配、流控制、算术运算、甚至于函数等编程语言具备的一些特性。它发行于 1977 年，已经超过了 40 岁堪称古董级软件。为了更让人能直接明白它的用途，我把它称为是命令行下的">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-08-26T09:15:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="awk 入坑指北">
+<meta name="twitter:description" content="awk（/ɔːk/） 是 *nix 下一种强大的文本处理工具，其名称取自三位作者 Alfred Aho，Peter Jay Weinberger，Brian Wilson Kernighan。awk 提供的功能包括不仅限于正则匹配、流控制、算术运算、甚至于函数等编程语言具备的一些特性。它发行于 1977 年，已经超过了 40 岁堪称古董级软件。为了更让人能直接明白它的用途，我把它称为是命令行下的">
+  
+    <link rel="alternate" href="/atom.xml" title="Jiavan 的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jiavan 的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jiavan.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-awk-入坑指北" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/10/awk-入坑指北/" class="article-date">
+  <time datetime="2018-01-10T13:40:27.000Z" itemprop="datePublished">2018-01-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      awk 入坑指北
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>awk（/ɔːk/） 是 *nix 下一种强大的文本处理工具，其名称取自三位作者 Alfred Aho，Peter Jay Weinberger，Brian Wilson Kernighan。awk 提供的功能包括不仅限于正则匹配、流控制、算术运算、甚至于函数等编程语言具备的一些特性。它发行于 1977 年，已经超过了 40 岁堪称古董级软件。为了更让人能直接明白它的用途，我把它称为是命令行下的 Excel，其中的一些概念和 Excel 有很多相似之处。</p>
+<a id="more"></a>
+<h2 id="TR-DR"><a href="#TR-DR" class="headerlink" title="TR;DR"></a>TR;DR</h2><ul>
+<li>awk 是一种高效的文本处理工具。</li>
+<li>awk 脚本的基本结构 BEGIN -&gt; BODY -&gt; END。</li>
+<li>基本语法，awk 脚本语法和 C 语言很很多相似之处。</li>
+<li>awk 脚本编程实践以及需要注意的地方。</li>
+</ul>
+<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p>在 linux 环境下我们有一些文本处理需求时，awk 就能派上用场了，比如 nginx 的访问日志，文本信息去重等等。awk 可以直接在命令行中执行比如：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">""</span> | awk <span class="string">'&#123;print "hello world!"&#125;'</span></span><br></pre></td></tr></table></figure></p>
+<p>也可以将一些逻辑比较复杂的代码写到一个 awk 脚本中，然后指定脚本文件执行：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">awk -f a.awk test.txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="程序结构"><a href="#程序结构" class="headerlink" title="程序结构"></a>程序结构</h2><p>awk 直接在命令行中输入和执行 awk 脚本效果是一样的，所以以下代码为了便于阅读都写入到一个脚本文件中。<br>一个完整的 awk 脚本分为三个部分：<br><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>&#123; print(<span class="string">"BEGIN"</span>);  &#125;</span><br><span class="line">&#123; print(<span class="string">"BODY"</span>);  &#125;</span><br><span class="line"><span class="keyword">END</span>&#123; print(<span class="string">"END"</span>);  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>但是 awk 脚本要能正确执行只需要其中一个阶段就行，第一个阶段是 BEGIN，就是还未开始扫描输入文本时候的预处理时间，中间 BODY 是扫描文本执行阶段，awk 每扫描到输入文本一行数据就会执行 BODY 中的脚本代码，最后是 END，即文本扫描完成的阶段，在绝大部分使用场景中我们直接在 {} 中写代码就可以了，即省略掉了 BEGIN 和 END。</p>
+<h2 id="awk-理解输入"><a href="#awk-理解输入" class="headerlink" title="awk 理解输入"></a>awk 理解输入</h2><p>前面已经提到，我将 awk 视为 *nix 下的 Excel，下面提到的一些概念和 Excel 颇为相似。对于 awk 处理的文本一般情况下是一行一行的，比如 nginx 的日志文件，在 awk 的视角文本的一行被视为一条记录（Record）行以 \n 来进行划分。在一行中通过空格又被分为多个域（Field），这就和 Excel 的行列差不多了。所以在 awk 程序中存在 2 个全局变量 NF，NR，这就很容易理解了。</p>
+<p>需要值得注意的是域的索引不是从 0 开始的，而是从 1 开始，0 是当前行的引用，通过 $n 的语法来拿到不同域的值。<br><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="comment"># 当前记录有多少个域</span></span><br><span class="line">    print(<span class="string">"NF is:"</span> NF);</span><br><span class="line">    <span class="comment"># 当前是第几条记录</span></span><br><span class="line">    print(<span class="string">"NR is:"</span> NR);</span><br><span class="line">    <span class="comment"># 输出当前行的文本</span></span><br><span class="line">    print(<span class="variable">$0</span>);</span><br><span class="line">    <span class="comment"># 输出当前行的第一个域</span></span><br><span class="line">    print(<span class="variable">$1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>以上代码中 print 是 awk 的一个内置函数，用于输出文本信息。在 awk 脚本中可以通过 # 号来写注释。</p>
+<h2 id="awk-语法"><a href="#awk-语法" class="headerlink" title="awk 语法"></a>awk 语法</h2><p>和很多脚本程序一样，awk 没有严格的数据类型，不同数据类型直接可以直接转换。在 awk 中声明的变量统统会成为全局变量，所以在一处修改了变量值，脚本其他地方也会受到影响。在流程控制上几乎和主流编程语言完全一样。if-else, while 都是支持的，在后续的列子中可以看到。</p>
+<h3 id="传入参数"><a href="#传入参数" class="headerlink" title="传入参数"></a>传入参数</h3><p>在命令行下通过 -v 参数还可以给 awk 脚本传入参数，比如：<br><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">echo <span class="string">''</span> | awk -v name=<span class="string">"jiavan"</span> <span class="string">'&#123;print("hello, "name);&#125;'</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h3><p>awk 内置了很多字符串处理以及数学运算方面的函数，常用的如：</p>
+<ul>
+<li>index(str1, str2)：返回 str2 在 str1 中出现的索引。</li>
+<li>length(str)：返回一个字符串的长度。</li>
+<li>substr(str, n, m)：截取字符串 str 的子串。</li>
+<li>match(str, reg)：正则匹配，返回第一次匹配索引。<br>…..<br>跟多使用可以 man 一下。</li>
+</ul>
+<h3 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h3><p>awk 还内置了一些变量名：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$0 | 当前处理记录</span><br><span class="line">$1-$n | 当前记录的n个字段</span><br><span class="line">FS | 域分隔符</span><br><span class="line">NF | 当前记录的域数目</span><br><span class="line">NR | 已经处理的记录条数</span><br><span class="line">RS | 记录分隔符</span><br><span class="line">OFS | 输出字段分隔符</span><br><span class="line">ORS | 输出记录分隔符</span><br><span class="line">ARGC | 命令行参数个数</span><br><span class="line">ARGV | 命令行参数数组</span><br><span class="line">FILENAME | 当前输入文件名字</span><br><span class="line">IGNRECASE | 记录为真代表忽略大小写匹配</span><br><span class="line">ARGIND | 当前被处理文件的ARGV标志符</span><br><span class="line">CONVFMT | 数字转换格式 %.6g</span><br><span class="line">ENVIRON | UNIX环境变量</span><br><span class="line">ERRNO | UNIX系统错误消息</span><br><span class="line">FIELDWIDTHS | 输入字段宽度的空白分隔字符串</span><br><span class="line">FNR	| 当前记录数</span><br><span class="line">OFMT | 数字的输出格式 %.6g</span><br><span class="line">RSTART | 被匹配函数匹配的字符串首</span><br><span class="line">RLENGTH | 匹配函数匹配的字符串长度</span><br><span class="line">SUBSEP | \034</span><br><span class="line">PROCINFO | 当前运行程序进程信息数组</span><br></pre></td></tr></table></figure></p>
+<h2 id="awk-实践"><a href="#awk-实践" class="headerlink" title="awk 实践"></a>awk 实践</h2><h3 id="文本去重"><a href="#文本去重" class="headerlink" title="文本去重"></a>文本去重</h3><p>有以下具有重复文本的文件 name.txt。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// name.txt</span><br><span class="line">jiavan</span><br><span class="line">kellen</span><br><span class="line">lzy</span><br><span class="line">fakafang</span><br><span class="line">jiavan</span><br><span class="line">lzy</span><br><span class="line">pig</span><br><span class="line"></span><br><span class="line">// a.awk</span><br><span class="line">&#123;</span><br><span class="line">    ++names[$1];</span><br><span class="line">&#125;</span><br><span class="line">END &#123;</span><br><span class="line">    for (key in names) &#123;</span><br><span class="line">        print(key) &gt; &quot;./unique.txt&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上方 a.awk 先遍历文件行存入一个数组，在 awk 中数组的 key 可以是任意数据类型，value 也可以是任意数据类型，名称每出现一次 +1，最后就能统计出每个名称出现的次数以及将所有不重复的 key 输出到一个文件中，这里的操作和 bash 类似。</p>
+<h3 id="搜寻字符串"><a href="#搜寻字符串" class="headerlink" title="搜寻字符串"></a>搜寻字符串</h3><p>对于输入的文本 words.txt，我们使用 awk 找出带有 <code>av</code> 关键字的单词。<br><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">//</span> words.txt</span><br><span class="line">this is a test file with some key words like average and avoid</span><br><span class="line">--created by jiavan.</span><br><span class="line"></span><br><span class="line"><span class="regexp">//</span> b.awk</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span> (match(<span class="variable">$0</span>, <span class="regexp">/[a-zA-Z]+?av[a-zA-Z]+?/</span>)) &#123;</span><br><span class="line">        print(substr(<span class="variable">$0</span>, RSTART, RLENGTH));</span><br><span class="line">        <span class="variable">$0</span> = substr(<span class="variable">$0</span>, RSTART + RLENGTH);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="regexp">//</span> result</span><br><span class="line">$ awk -f b.awk words.txt</span><br><span class="line">average</span><br><span class="line">avoid</span><br><span class="line">av</span><br><span class="line">jiavan</span><br></pre></td></tr></table></figure></p>
+<p>所以在 TX 游戏中我的 ID 是 <code>Ji**an</code> 这样显示的 :-)</p>
+<p>本文仅提供给正在拉屎的人阅读，不做参考。</p>
+<blockquote>
+<p>原文来自 <a href="https://jiavan.com">https://jiavan.com</a></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2018/01/10/awk-入坑指北/" data-id="cjlan6b9e001aktqfnhu3gv5v" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/11/12/关于自由软件与开源协议/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">关于自由软件与开源协议</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chromeapp/">chromeapp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/css/">css</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding-is-interesting/">Coding is interesting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSQL/">NoSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/block-chain/">block-chain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chromeapp/">chromeapp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dom/">dom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flux/">flux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game-dev/">game-dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gcd/">gcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http/">http</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libgdx/">libgdx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltc/">ltc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pow/">pow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/">story</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端自动化/">前端自动化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序/">排序</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Coding-is-interesting/" style="font-size: 10px;">Coding is interesting</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/NoSQL/" style="font-size: 10px;">NoSQL</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/block-chain/" style="font-size: 10px;">block-chain</a> <a href="/tags/c/" style="font-size: 18px;">c</a> <a href="/tags/chromeapp/" style="font-size: 16px;">chromeapp</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/dom/" style="font-size: 10px;">dom</a> <a href="/tags/flux/" style="font-size: 12px;">flux</a> <a href="/tags/game-dev/" style="font-size: 10px;">game-dev</a> <a href="/tags/gcd/" style="font-size: 10px;">gcd</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/libgdx/" style="font-size: 10px;">libgdx</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/ltc/" style="font-size: 10px;">ltc</a> <a href="/tags/math/" style="font-size: 14px;">math</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/pow/" style="font-size: 10px;">pow</a> <a href="/tags/react/" style="font-size: 12px;">react</a> <a href="/tags/redux/" style="font-size: 12px;">redux</a> <a href="/tags/story/" style="font-size: 10px;">story</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/前端自动化/" style="font-size: 10px;">前端自动化</a> <a href="/tags/排序/" style="font-size: 10px;">排序</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/01/10/awk-入坑指北/">awk 入坑指北</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/12/关于自由软件与开源协议/">关于自由软件与开源协议</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/10/CPU挖矿-利用VPS挖莱特币/">CPU挖矿-利用VPS挖莱特币</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/30/See-U-2016/">See U 2016</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/26/Redux中间件与异步Action/">Redux中间件与异步Action</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Jiavan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

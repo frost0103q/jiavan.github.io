@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83371004-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>ES中理解原型以及对象创建方式 | Jiavan 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="工厂模式function createObj(name, age) &amp;#123;    var o = &amp;#123;&amp;#125;;    o.name = name;    o.age = age;    o.sayName = function () &amp;#123;        console.log(this.name);    &amp;#125;    return o;&amp;#125;var p1">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES中理解原型以及对象创建方式">
+<meta property="og:url" content="https://jiavan.com/2016/03/05/ES中理解原型以及对象创建方式/index.html">
+<meta property="og:site_name" content="Jiavan 的博客">
+<meta property="og:description" content="工厂模式function createObj(name, age) &amp;#123;    var o = &amp;#123;&amp;#125;;    o.name = name;    o.age = age;    o.sayName = function () &amp;#123;        console.log(this.name);    &amp;#125;    return o;&amp;#125;var p1">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-08-26T09:15:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ES中理解原型以及对象创建方式">
+<meta name="twitter:description" content="工厂模式function createObj(name, age) &amp;#123;    var o = &amp;#123;&amp;#125;;    o.name = name;    o.age = age;    o.sayName = function () &amp;#123;        console.log(this.name);    &amp;#125;    return o;&amp;#125;var p1">
+  
+    <link rel="alternate" href="/atom.xml" title="Jiavan 的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jiavan 的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jiavan.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ES中理解原型以及对象创建方式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/05/ES中理解原型以及对象创建方式/" class="article-date">
+  <time datetime="2016-03-05T12:06:49.000Z" itemprop="datePublished">2016-03-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ES中理解原型以及对象创建方式
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createObj</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> o = &#123;&#125;;</span><br><span class="line">    o.name = name;</span><br><span class="line">    o.age = age;</span><br><span class="line">    o.sayName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> o;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> p1 = createObj(<span class="string">'hi'</span>, <span class="number">21</span>);</span><br><span class="line"><span class="keyword">var</span> p2 = createObj(<span class="string">'jiavan'</span>, <span class="number">20</span>);</span><br></pre></td></tr></table></figure>
+<p>问题：没有解决对象识别的问题。</p>
+<a id="more"></a>
+<h3 id="构造函数模式"><a href="#构造函数模式" class="headerlink" title="构造函数模式"></a>构造函数模式</h3><p>创建对象可以使用自定义构造函数，从而定义自定义对象类型的属性和方法。<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.age = age;</span><br><span class="line">    <span class="keyword">this</span>.sayName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        alert(<span class="keyword">this</span>.name);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> Person(<span class="string">'jiavan'</span>, <span class="number">29</span>);</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> Person(<span class="string">'hi'</span>, <span class="number">20</span>);</span><br><span class="line">p1.constructor === Person;<span class="comment">//true</span></span><br><span class="line">p1.constructor === p2.constructor;<span class="comment">//true</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>使用new 操作符调用构造函数实际上会经历以下4个步骤</strong>：</p>
+<ul>
+<li>创建一个新的对象</li>
+<li>将构造函数的作用域赋值给新的对象（因此this指向了新的对象），在没有new之前，如果构造函数在全局作用域下，this应该是指向window的，如果是直接在全局执行环境下调用了构造函数，那么this.name是挂在在window下的全局变量，如果是new操作符，则更改了this的指向。</li>
+<li>执行构造函数中的代码</li>
+<li>返回一个新的对象</li>
+</ul>
+<p>constructor属性是用来标识对象类型的，但是用instanceof来检测会更可靠一些。</p>
+<p>任何函数都可以通过new操作符来调用，与普通的函数没有任何区别，只是用途是不一样的。创建自定义的构造函数意味着可以将它的<strong>实例作为一种特定的类型</strong>，这也解决了工厂模式的对象识别问题。</p>
+<p>构造函数模式的问题：<br>每个方法都要在每个实例上重新创建一遍，上面两个对象都有sayName方法，但是两个方法不是同一个Function实例，每次定义一个函数都实例化了一个对象。可以通过把函数的定义放到构造函数之外来解决这个问题。<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.age = age;</span><br><span class="line">    <span class="keyword">this</span>.sayName = sayName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sayName</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> Person(<span class="string">'jiavan'</span>, <span class="number">29</span>);</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> Person(<span class="string">'hi'</span>, <span class="number">20</span>);</span><br></pre></td></tr></table></figure></p>
+<p>但是这样的做法又会出现新的问题，如果当构造函数需要定义很多方法，那么将会有许多的函数被定义在全局作用域下，那么就<strong>缺失了OO的封装性</strong>，就引入了原型模式。</p>
+<h3 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h3><p>每个函数都有一个prototype属性（函数也是对象），这个属性是一个指针，指向一个对象。该对象指向的是该特定类型<strong>所有实例所共享的属性和方法</strong>，这样就可以直接将对象信息添加到原型对象中：<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">Person.prototype.name = <span class="string">'jiavan'</span>;</span><br><span class="line">Person.prototype.age = <span class="number">20</span>;</span><br><span class="line">Person.prototype.sayName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> Person();</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> Person();</span><br><span class="line">p1.sayName();<span class="comment">//jiavan</span></span><br><span class="line">p1.name === p2.name;<span class="comment">//true</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="ECMAScript中的原型对象"><a href="#ECMAScript中的原型对象" class="headerlink" title="ECMAScript中的原型对象"></a>ECMAScript中的原型对象</h4><p>无论什么时候，只要创建了一个函数就会为该函数创建一个prototype属性，该属性指向函数的原型对象，在默认情况下，所有原型对象都会自动获得一个constructor属性，这个属性指向prototype所在函数的指针。</p>
+<p>在创建了自定义构造函数之后，其原型对象<strong>默认只会获得constructor属性</strong>，其他方法都是从Object继承而来。</p>
+<p>当调用一个构造函数创建一个新的实例后，该实例内部将包含一个指针，指向构造函数的原型对象。在ES5中叫这个指针[[Prototype]]，每个对象上都支持一个属性<strong>proto</strong>（浏览器实现），在其它实现中这个属性对脚本则是完全不可见的，不过要明白的是<strong>这个链接存在于实例与构造函数的原型对象之间，而不是存在于实例与构造函数之间</strong>。</p>
+<p>在所有的实现中都是不能访问到[[Prototype]]，但是可以通过isPrototypeOf()方法来确定对象件是否存在这种关系。</p>
+<p>ES5中增加了一个新的方法，Object.getPrototypeOf(p1)，将会返回一个对象，这个对象就是该实例的原型。</p>
+<p>属性搜索过程：首先会在对象实例的属性中查找，如果没有找到就会从对象实例的原型中查找。</p>
+<p>注意：虽然可以通过对象实例来访问原型中的属性，但是<strong>不能通过对象重写原型中的值</strong>，如果在实例中添加了一个与原型重名的属性，那么实例属性将会屏蔽原型中的属性。换句话说重写同名属性只会阻止我们访问原型中的那个属性，但是并不能改变原型中属性的值。可以使用delete来删除实例属性，从而让我们能继续访问原型中属性的值。</p>
+<h4 id="prototype添加属性与重写prototype对象"><a href="#prototype添加属性与重写prototype对象" class="headerlink" title="prototype添加属性与重写prototype对象"></a>prototype添加属性与重写prototype对象</h4><p>上面提到了，在创建函数的时候就会创建原型对象，并且<strong>原型对象自动会获得一个constructor属性</strong>，如果按照下面的写法:<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">Person.prototype = &#123;</span><br><span class="line">    name: <span class="string">'jiavan'</span>,</span><br><span class="line">    age: <span class="number">20</span>  </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>这样会切断掉prototype指向最初创建函数时的对象,而重新指向了新的对象，所以<strong>constructor属性讲不会存在</strong>，但是还是能用instanceof来判断类型。如果要存在constructor，也可以这样写：<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">Person.prototype = &#123;</span><br><span class="line">	<span class="keyword">constructor</span>： Person,</span><br><span class="line">    name: 'jiavan',</span><br><span class="line">    age: 20  </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>这也体现了原型的动态性。</p>
+<h4 id="原型的动态性"><a href="#原型的动态性" class="headerlink" title="原型的动态性"></a>原型的动态性</h4><p>注意：实例中的指针仅指向原型，而不指向构造函数。<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> Person();</span><br><span class="line">Person.prototype = &#123;</span><br><span class="line">    name: <span class="string">'jiavan'</span>,</span><br><span class="line">    age: <span class="number">20</span>,</span><br><span class="line">    sayName: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">p.sayName();</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码会报错，因为在实例化对象后，prototype被重写了，但是最开始实例化对象的时候的的[[Prototype]]指向的是最初的原型而不是后面重写的原型对象，所以找不到sayName方法，但是改成下面就行了:<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">Person.prototype = &#123;</span><br><span class="line">    name: <span class="string">'jiavan'</span>,</span><br><span class="line">    age: <span class="number">20</span>,</span><br><span class="line">    sayName: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> Person();</span><br><span class="line">p.sayName();</span><br></pre></td></tr></table></figure></p>
+<h4 id="原型对象的问题"><a href="#原型对象的问题" class="headerlink" title="原型对象的问题"></a>原型对象的问题</h4><p>原型中所有的属性是被很多的实例共享的，这种共享对于函数非常合适，对于那些包含基本值的属性来说还行，通过在实例上添加一个同名的属性，可以隐藏原型中的对应属性。然而，对于包含引用类型值的属性来说，问题就比较突出了，修改引用类型的值会直接影响原型对象的值，导致也影响了其他实例的属性。</p>
+<h3 id="组合使用构造函数模式与原型模式"><a href="#组合使用构造函数模式与原型模式" class="headerlink" title="组合使用构造函数模式与原型模式"></a>组合使用构造函数模式与原型模式</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.age = age;</span><br><span class="line">    <span class="keyword">this</span>.color = [<span class="string">'red'</span>, <span class="string">'blue'</span>];</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype = &#123;</span><br><span class="line">    <span class="keyword">constructor</span>: Person,</span><br><span class="line">    sayName: function () &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> Person(<span class="string">'jiavan'</span>, <span class="number">19</span>);</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> Person(<span class="string">'lzy'</span>, <span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">p1.color.push(<span class="string">'green'</span>);</span><br><span class="line">p1.color === p2.color;<span class="comment">//false</span></span><br><span class="line">p1.sayName === p2.sayName;<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<p>修改了p1实例的color但是并不会对p2造成影响，因为它们是不同的数组引用。这种构造函数与原型混合成的模式，是ES中用的最多的自定义类型方法。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/03/05/ES中理解原型以及对象创建方式/" data-id="cjlan6b8i000aktqfa3zi4z65" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/03/18/Javascript模块化编程及编写加载遵循AMD规范的代码/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Javascript模块化编程及编写加载遵循AMD规范的代码
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/04/Yeoman-Bower-Gulp前端自动化/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Yeoman/Bower/Gulp前端自动化</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chromeapp/">chromeapp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/css/">css</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding-is-interesting/">Coding is interesting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSQL/">NoSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/block-chain/">block-chain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chromeapp/">chromeapp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dom/">dom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flux/">flux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game-dev/">game-dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gcd/">gcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http/">http</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libgdx/">libgdx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltc/">ltc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pow/">pow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/">story</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端自动化/">前端自动化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序/">排序</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Coding-is-interesting/" style="font-size: 10px;">Coding is interesting</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/NoSQL/" style="font-size: 10px;">NoSQL</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/block-chain/" style="font-size: 10px;">block-chain</a> <a href="/tags/c/" style="font-size: 18px;">c</a> <a href="/tags/chromeapp/" style="font-size: 16px;">chromeapp</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/dom/" style="font-size: 10px;">dom</a> <a href="/tags/flux/" style="font-size: 12px;">flux</a> <a href="/tags/game-dev/" style="font-size: 10px;">game-dev</a> <a href="/tags/gcd/" style="font-size: 10px;">gcd</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/libgdx/" style="font-size: 10px;">libgdx</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/ltc/" style="font-size: 10px;">ltc</a> <a href="/tags/math/" style="font-size: 14px;">math</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/pow/" style="font-size: 10px;">pow</a> <a href="/tags/react/" style="font-size: 12px;">react</a> <a href="/tags/redux/" style="font-size: 12px;">redux</a> <a href="/tags/story/" style="font-size: 10px;">story</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/前端自动化/" style="font-size: 10px;">前端自动化</a> <a href="/tags/排序/" style="font-size: 10px;">排序</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/01/10/awk-入坑指北/">awk 入坑指北</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/12/关于自由软件与开源协议/">关于自由软件与开源协议</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/10/CPU挖矿-利用VPS挖莱特币/">CPU挖矿-利用VPS挖莱特币</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/30/See-U-2016/">See U 2016</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/26/Redux中间件与异步Action/">Redux中间件与异步Action</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Jiavan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

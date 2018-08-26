@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83371004-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>Basics.Chrome App的生命周期 | Jiavan 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="应用程序运行时和事件页面是负责管理应用的生命周期, 应用程序运行时管理应用程序安装,控制活动页面,可以随时关闭应用程序. 事件页面监听程序在运行时触发的一些事件和管理程序什么时候启动如何启动. 生命周期是如何工作的应用程序从用户的桌面加载事件页面, onLaunch 事件将会被触发. 这个事件告诉事件页面那个窗口将会被启动和窗口的大小. 这里的生命周期图并不是最好的,但它是实用的(我们很快就会使它">
+<meta name="keywords" content="javascript,chromeapp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Basics.Chrome App的生命周期">
+<meta property="og:url" content="https://jiavan.com/2016/02/16/Basics-Chrome-App的生命周期/index.html">
+<meta property="og:site_name" content="Jiavan 的博客">
+<meta property="og:description" content="应用程序运行时和事件页面是负责管理应用的生命周期, 应用程序运行时管理应用程序安装,控制活动页面,可以随时关闭应用程序. 事件页面监听程序在运行时触发的一些事件和管理程序什么时候启动如何启动. 生命周期是如何工作的应用程序从用户的桌面加载事件页面, onLaunch 事件将会被触发. 这个事件告诉事件页面那个窗口将会被启动和窗口的大小. 这里的生命周期图并不是最好的,但它是实用的(我们很快就会使它">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://jiavan.com/images/chrome-app-lifecycle.png">
+<meta property="og:updated_time" content="2018-08-26T09:15:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Basics.Chrome App的生命周期">
+<meta name="twitter:description" content="应用程序运行时和事件页面是负责管理应用的生命周期, 应用程序运行时管理应用程序安装,控制活动页面,可以随时关闭应用程序. 事件页面监听程序在运行时触发的一些事件和管理程序什么时候启动如何启动. 生命周期是如何工作的应用程序从用户的桌面加载事件页面, onLaunch 事件将会被触发. 这个事件告诉事件页面那个窗口将会被启动和窗口的大小. 这里的生命周期图并不是最好的,但它是实用的(我们很快就会使它">
+<meta name="twitter:image" content="https://jiavan.com/images/chrome-app-lifecycle.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Jiavan 的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jiavan 的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jiavan.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Basics-Chrome-App的生命周期" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/16/Basics-Chrome-App的生命周期/" class="article-date">
+  <time datetime="2016-02-16T06:28:53.000Z" itemprop="datePublished">2016-02-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/chromeapp/">chromeapp</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Basics.Chrome App的生命周期
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>应用程序运行时和事件页面是负责管理应用的生命周期, 应用程序运行时管理应用程序安装,控制活动页面,可以随时关闭应用程序. 事件页面监听程序在运行时触发的一些事件和管理程序什么时候启动如何启动.</p>
+<h4 id="生命周期是如何工作的"><a href="#生命周期是如何工作的" class="headerlink" title="生命周期是如何工作的"></a>生命周期是如何工作的</h4><p>应用程序从用户的桌面加载事件页面, <code>onLaunch</code> 事件将会被触发. 这个事件告诉事件页面那个窗口将会被启动和窗口的大小. 这里的生命周期图并不是最好的,但它是实用的(我们很快就会使它更好的)。<br><img src="/images/chrome-app-lifecycle.png" alt="chrome-app-lifecircle.png"></p>
+<p>当事件页面没有可执行的JavaScript, 没有等待回调, 没有打开的窗口, 运行时将会卸载事件页面和关闭应用程序. 在卸载事件页面之前, <code>onSuspend()</code> 事件将会被触发. 在应用程序关闭之前这让事件页面机会做简单的清理任务.</p>
+<a id="more"></a>
+<h4 id="创建事件页面和窗口"><a href="#创建事件页面和窗口" class="headerlink" title="创建事件页面和窗口"></a>创建事件页面和窗口</h4><p>每个Chrome App必须有事件页面, 这个页面包含了这个App的顶级逻辑结构并且负责创建其他窗口页面.</p>
+<h5 id="创建事件页面"><a href="#创建事件页面" class="headerlink" title="创建事件页面"></a>创建事件页面</h5><p>创建页面事件需要在<code>manifest</code> 文件中包含<code>background</code> 属性并且在脚本数组中包含<code>background.js</code> , 任何要使用的库/脚本首先需要添加到<code>background</code> 属性中:</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="string">"background"</span>: &#123;</span><br><span class="line">  <span class="string">"scripts"</span>: [</span><br><span class="line">    <span class="string">"foo.js"</span>,</span><br><span class="line">    <span class="string">"background.js"</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你的事件页面必须包含<code>onLaunch()</code> 函数, 无论你通过哪种方式来启动你的App, 这个函数是最先被调用的.</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">chrome.app.runtime.onLaunched.addListener(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">// tell your app what to launch and how</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h5 id="创建窗口"><a href="#创建窗口" class="headerlink" title="创建窗口"></a>创建窗口</h5><p>一个事件页面可能会创建多个窗口.  默认情况下, 这些窗口创建一个脚本连接到活动页面和页面直接可用的事件.</p>
+<p>Chrome App的窗口不会与Chrome浏览器中的窗口发生任何联系, 他们有可选的框架来控制窗口的标题栏和大小, 还有一个声明窗口的ID, 窗户没有ID重启后不会恢复到它们的大小和位置.</p>
+<p>这里有一个简单的例子通过<code>background.js</code> 来创建一个窗口:</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">chrome.app.runtime.onLaunched.addListener(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  chrome.app.window.create(<span class="string">'main.html'</span>, &#123;</span><br><span class="line">    id: <span class="string">'MyWindowID'</span>,</span><br><span class="line">    bounds: &#123;</span><br><span class="line">      width: <span class="number">800</span>,</span><br><span class="line">      height: <span class="number">600</span>,</span><br><span class="line">      left: <span class="number">100</span>,</span><br><span class="line">      top: <span class="number">100</span></span><br><span class="line">    &#125;,</span><br><span class="line">    minWidth: <span class="number">800</span>,</span><br><span class="line">    minHeight: <span class="number">600</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h5 id="包含启动数据"><a href="#包含启动数据" class="headerlink" title="包含启动数据"></a>包含启动数据</h5><p>根据你App的启动方式, 你可能需要处理一些数据在事件页面. 默认情况下, 通过Chrome Launcher来启动的程序没有数据. 对有需要处理文件的程序, 你需要操作<code>launchData.items</code> 参数来允许他们被执行.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/02/16/Basics-Chrome-App的生命周期/" data-id="cjlan6b840005ktqffwlr2aky" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chromeapp/">chromeapp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/02/17/NoSQL与CAP定理简介/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          NoSQL与CAP定理简介
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/02/13/简化的桶排序、冒泡排序和快速排序/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">简化的桶排序、冒泡排序和快速排序</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chromeapp/">chromeapp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/css/">css</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding-is-interesting/">Coding is interesting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSQL/">NoSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/block-chain/">block-chain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chromeapp/">chromeapp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dom/">dom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flux/">flux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game-dev/">game-dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gcd/">gcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http/">http</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libgdx/">libgdx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltc/">ltc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pow/">pow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/">story</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端自动化/">前端自动化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序/">排序</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Coding-is-interesting/" style="font-size: 10px;">Coding is interesting</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/NoSQL/" style="font-size: 10px;">NoSQL</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/block-chain/" style="font-size: 10px;">block-chain</a> <a href="/tags/c/" style="font-size: 18px;">c</a> <a href="/tags/chromeapp/" style="font-size: 16px;">chromeapp</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/dom/" style="font-size: 10px;">dom</a> <a href="/tags/flux/" style="font-size: 12px;">flux</a> <a href="/tags/game-dev/" style="font-size: 10px;">game-dev</a> <a href="/tags/gcd/" style="font-size: 10px;">gcd</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/libgdx/" style="font-size: 10px;">libgdx</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/ltc/" style="font-size: 10px;">ltc</a> <a href="/tags/math/" style="font-size: 14px;">math</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/pow/" style="font-size: 10px;">pow</a> <a href="/tags/react/" style="font-size: 12px;">react</a> <a href="/tags/redux/" style="font-size: 12px;">redux</a> <a href="/tags/story/" style="font-size: 10px;">story</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/前端自动化/" style="font-size: 10px;">前端自动化</a> <a href="/tags/排序/" style="font-size: 10px;">排序</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/01/10/awk-入坑指北/">awk 入坑指北</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/12/关于自由软件与开源协议/">关于自由软件与开源协议</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/10/CPU挖矿-利用VPS挖莱特币/">CPU挖矿-利用VPS挖莱特币</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/30/See-U-2016/">See U 2016</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/26/Redux中间件与异步Action/">Redux中间件与异步Action</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Jiavan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

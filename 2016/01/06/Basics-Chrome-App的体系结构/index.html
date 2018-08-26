@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83371004-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>Basics.Chrome App的体系结构 | Jiavan 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Chrome Apps紧密结合与用户的操作系统.设计他们的目的是为了作为一个单独的Tab独立于浏览器运行,在离线环境或则在网络连接性很差的情况下比起经典的web环境中还能具有强大的功能. 应用程序容器、编程和安全模型都满足这些Chrome应用程序的需求。 App容器模型应用程序容器描述了Chrome应用程序的视觉外观和加载行为. Chrome Apps与传统的web页面看起来不一样是因为app容器">
+<meta name="keywords" content="chromeapp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Basics.Chrome App的体系结构">
+<meta property="og:url" content="https://jiavan.com/2016/01/06/Basics-Chrome-App的体系结构/index.html">
+<meta property="og:site_name" content="Jiavan 的博客">
+<meta property="og:description" content="Chrome Apps紧密结合与用户的操作系统.设计他们的目的是为了作为一个单独的Tab独立于浏览器运行,在离线环境或则在网络连接性很差的情况下比起经典的web环境中还能具有强大的功能. 应用程序容器、编程和安全模型都满足这些Chrome应用程序的需求。 App容器模型应用程序容器描述了Chrome应用程序的视觉外观和加载行为. Chrome Apps与传统的web页面看起来不一样是因为app容器">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://jiavan.com/images/chrome-app-container.png">
+<meta property="og:image" content="https://jiavan.com/images/chrome-app-lifecycle-tab.png">
+<meta property="og:updated_time" content="2018-08-26T09:15:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Basics.Chrome App的体系结构">
+<meta name="twitter:description" content="Chrome Apps紧密结合与用户的操作系统.设计他们的目的是为了作为一个单独的Tab独立于浏览器运行,在离线环境或则在网络连接性很差的情况下比起经典的web环境中还能具有强大的功能. 应用程序容器、编程和安全模型都满足这些Chrome应用程序的需求。 App容器模型应用程序容器描述了Chrome应用程序的视觉外观和加载行为. Chrome Apps与传统的web页面看起来不一样是因为app容器">
+<meta name="twitter:image" content="https://jiavan.com/images/chrome-app-container.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Jiavan 的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jiavan 的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jiavan.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Basics-Chrome-App的体系结构" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/06/Basics-Chrome-App的体系结构/" class="article-date">
+  <time datetime="2016-01-05T22:10:15.000Z" itemprop="datePublished">2016-01-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/chromeapp/">chromeapp</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Basics.Chrome App的体系结构
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Chrome Apps紧密结合与用户的操作系统.设计他们的目的是为了作为一个单独的Tab独立于浏览器运行,在离线环境或则在网络连接性很差的情况下比起经典的web环境中还能具有强大的功能. 应用程序容器、编程和安全模型都满足这些Chrome应用程序的需求。</p>
+<h4 id="App容器模型"><a href="#App容器模型" class="headerlink" title="App容器模型"></a>App容器模型</h4><p>应用程序容器描述了Chrome应用程序的视觉外观和加载行为. Chrome Apps与传统的web页面看起来不一样是因为app容器不显示任何传统网页中的UI控件.它只显示一个矩形的空白区域, 这允许应用程序融合与“本地”系统上的应用程序, 而且可以防止用户通过手动更改程序的URL地址来混乱App的逻辑.</p>
+<p>Chrome App的加载和不同的web app(web页面)不一样. 加载相同类型的内容: HTML和CSS, JavaScript文件, 然而, Chrome App是加载到app容器, 而不是在浏览器标签, 而且Chrome App必须要加载文件, 且文件资源来自本地, 这迫使所有Chrome App离线时至少有最低限度功能, 它还提供了一个地方执行更严格的安全措施。<br><img src="/images/chrome-app-container.png" alt="chrome-app-container.png"></p>
+<a id="more"></a>
+<h4 id="程序设计模型"><a href="#程序设计模型" class="headerlink" title="程序设计模型"></a>程序设计模型</h4><p>编程模型描述了Chrome应用程序的生命周期和窗口行为. 类似于本地应用, 这个编程模型的目的是让用户和他们的系统完全控制应用程序的生命周期. Chrome应用程序生命周期应该独立于浏览器窗口的行为或网络连接.</p>
+<p>“<strong>事件页面</strong>“通过响应用户的手势和系统事件来管理Chrome App的生命周期, 这个页面是看不见的, 只存在于后台, 在系统运行的时候它可以自动的关闭. 它控制窗户打开和关闭, 当应用程序启动或终止的时候. <strong>一个应用程序只能有一个事件页面</strong>.</p>
+<h5 id="关于App的生命周期"><a href="#关于App的生命周期" class="headerlink" title="关于App的生命周期"></a>关于App的生命周期</h5><p>为详细说明如何使用编程模型,管理应用程序生命周期。下面是一个简短的总结Chrome应用程序生命周期的开始:</p>
+<p><img src="/images/chrome-app-lifecycle-tab.png" alt="lifecycle"></p>
+<h4 id="安全模型"><a href="#安全模型" class="headerlink" title="安全模型"></a>安全模型</h4><p>Chrome应用程序安全模型通过以安全的方式来管理用户信息, 从而来确保用户信息的安全. 遵守CSP包括详细信息如何遵守内容安全策略. 这一策略阻碍和减少了危险脚本和跨站点脚本漏洞,保护用户免受中间人攻击.</p>
+<p> 与web页面相比, Chrome App从本地加载程序主页提供了一个更安全的地方来执行. 就像Chrome扩展,用户必须明确同意相信Chrome应用程序安装. 他们授予应用程序权限访问和使用他们的数据, 每个API,应用程序使用将拥有自己的许可, Chrome应用程序安全模型也能够在每个窗口的基础上设置权限分离, 这可以让你减少你的应用程序中的代码访问危险的api, 同时仍然使用它们.</p>
+<p>Chrome应用程序重用Chrome扩展处理隔离, 再进一步通过隔离存储和外部内容, 每个应用程序都有自己的私人存储区域和不能访问另一个应用程序或个人的存储数据(如Cookie), 所有外部流程是孤立于应用程序, 一旦iframes与周围的页面运行在相同的环境中,他们只能用于加载其他应用程序页面, 您可以使用<code>object</code>标签嵌入外部内容, 这些内容单独运行在这个app的进程中.</p>
+<p>译者注: 后面的安全模型翻译难度有点高, 若存在一些理解上的错误, 请参考Google官方文档.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/01/06/Basics-Chrome-App的体系结构/" data-id="cjlan6b7p0001ktqf0rze3nf3" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chromeapp/">chromeapp</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/01/25/js中三种函数定义的差别以及函数声明提升/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          js中三种函数定义的差别以及函数声明提升
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/06/Basics-Chrome-App的内容安全策略-CSP/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Basics.Chrome App的内容安全策略(CSP)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chromeapp/">chromeapp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/css/">css</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding-is-interesting/">Coding is interesting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSQL/">NoSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/block-chain/">block-chain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chromeapp/">chromeapp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dom/">dom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flux/">flux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game-dev/">game-dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gcd/">gcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http/">http</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libgdx/">libgdx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltc/">ltc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pow/">pow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/">story</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端自动化/">前端自动化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序/">排序</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Coding-is-interesting/" style="font-size: 10px;">Coding is interesting</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/NoSQL/" style="font-size: 10px;">NoSQL</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/block-chain/" style="font-size: 10px;">block-chain</a> <a href="/tags/c/" style="font-size: 18px;">c</a> <a href="/tags/chromeapp/" style="font-size: 16px;">chromeapp</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/dom/" style="font-size: 10px;">dom</a> <a href="/tags/flux/" style="font-size: 12px;">flux</a> <a href="/tags/game-dev/" style="font-size: 10px;">game-dev</a> <a href="/tags/gcd/" style="font-size: 10px;">gcd</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/libgdx/" style="font-size: 10px;">libgdx</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/ltc/" style="font-size: 10px;">ltc</a> <a href="/tags/math/" style="font-size: 14px;">math</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/pow/" style="font-size: 10px;">pow</a> <a href="/tags/react/" style="font-size: 12px;">react</a> <a href="/tags/redux/" style="font-size: 12px;">redux</a> <a href="/tags/story/" style="font-size: 10px;">story</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/前端自动化/" style="font-size: 10px;">前端自动化</a> <a href="/tags/排序/" style="font-size: 10px;">排序</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/01/10/awk-入坑指北/">awk 入坑指北</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/12/关于自由软件与开源协议/">关于自由软件与开源协议</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/10/CPU挖矿-利用VPS挖莱特币/">CPU挖矿-利用VPS挖莱特币</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/30/See-U-2016/">See U 2016</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/26/Redux中间件与异步Action/">Redux中间件与异步Action</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Jiavan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

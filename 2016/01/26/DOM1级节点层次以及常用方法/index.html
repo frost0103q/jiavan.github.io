@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83371004-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>DOM1级节点层次以及常用方法 | Jiavan 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="DOM介绍DOM(Document Object Model) 文档对象模型，是针对HTML和XML文档的一个API。DOM描绘了一个层次化的节点树，允许开发人员添加、修改、删除页面中的某一部分。DOM脱胎于Netscape以及Microsoft创始的DHTML(动态HTML)，但它现在已经成为表现和操作页面标记的真正的跨平台、语言中立的方式。  注意，IE中所有DOM对象都是以COM对象的形式实">
+<meta name="keywords" content="javascript,DOM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DOM1级节点层次以及常用方法">
+<meta property="og:url" content="https://jiavan.com/2016/01/26/DOM1级节点层次以及常用方法/index.html">
+<meta property="og:site_name" content="Jiavan 的博客">
+<meta property="og:description" content="DOM介绍DOM(Document Object Model) 文档对象模型，是针对HTML和XML文档的一个API。DOM描绘了一个层次化的节点树，允许开发人员添加、修改、删除页面中的某一部分。DOM脱胎于Netscape以及Microsoft创始的DHTML(动态HTML)，但它现在已经成为表现和操作页面标记的真正的跨平台、语言中立的方式。  注意，IE中所有DOM对象都是以COM对象的形式实">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://jiavan.com/images/dom-htmltree.gif">
+<meta property="og:image" content="https://jiavan.com/images/dom-navigate.gif">
+<meta property="og:updated_time" content="2018-08-26T09:15:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DOM1级节点层次以及常用方法">
+<meta name="twitter:description" content="DOM介绍DOM(Document Object Model) 文档对象模型，是针对HTML和XML文档的一个API。DOM描绘了一个层次化的节点树，允许开发人员添加、修改、删除页面中的某一部分。DOM脱胎于Netscape以及Microsoft创始的DHTML(动态HTML)，但它现在已经成为表现和操作页面标记的真正的跨平台、语言中立的方式。  注意，IE中所有DOM对象都是以COM对象的形式实">
+<meta name="twitter:image" content="https://jiavan.com/images/dom-htmltree.gif">
+  
+    <link rel="alternate" href="/atom.xml" title="Jiavan 的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jiavan 的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jiavan.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-DOM1级节点层次以及常用方法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/26/DOM1级节点层次以及常用方法/" class="article-date">
+  <time datetime="2016-01-26T15:58:03.000Z" itemprop="datePublished">2016-01-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      DOM1级节点层次以及常用方法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="DOM介绍"><a href="#DOM介绍" class="headerlink" title="DOM介绍"></a>DOM介绍</h3><p><code>DOM(Document Object Model)</code> 文档对象模型，是针对HTML和XML文档的一个API。DOM描绘了一个层次化的节点树，允许开发人员添加、修改、删除页面中的某一部分。DOM脱胎于Netscape以及Microsoft创始的DHTML(动态HTML)，但它现在已经成为表现和操作页面标记的真正的跨平台、语言中立的方式。</p>
+<blockquote>
+<p>注意，IE中所有DOM对象都是以COM对象的形式实现的。这意味着IE中的DOM对象与原生Javascript对象的行为或活动特点并不一致。</p>
+</blockquote>
+<p><strong>W3C DOM标准</strong></p>
+<ul>
+<li>Core DOM 针对任何结构化文档的标准模型。</li>
+<li>XML DOM 针对XML文档的标准模型。</li>
+<li>HTML DOM 针对HTML文档的标准模型。</li>
+</ul>
+<a id="more"></a>
+<p>这里我们要说的是<strong>HTML DOM</strong></p>
+<ul>
+<li>HTML 标准对象模型。</li>
+<li>HTML 标准编程接口。</li>
+<li>W3C标准。</li>
+</ul>
+<p>HTML DOM定义了所有HTML元素的<strong>对象</strong>和<strong>属性</strong>，以及访问他们的<strong>方法</strong>，换句话说<strong><u>HTML DOM是关于如何获取、修改、添加、删除HTML元素的标准</u></strong> 。</p>
+<h3 id="节点层次"><a href="#节点层次" class="headerlink" title="节点层次"></a>节点层次</h3><p>DOM可以将任何HTML或XML文档描绘成一个由多层节点构成的结构。节点分为几种不同的类型，每种类型分别表示文档中不同的信息或标记。每个节点都有自己的特点、数据和方法，另外也有与其他节点存在某种关系。节点之间构成了层次，而所有页面标记则表现为一个以特定节点问根节点的树形结构。</p>
+<p><img src="/images/dom-htmltree.gif" alt="dom-图源w3school"></p>
+<p>文档节点是每个文档的根节点。<code>文档元素</code>是文档的最外层元素，文档中的其他所有元素都包含在文档元素中，<code>每个文档只能有一个文档元素</code>。 在HTML页面中，文档元素始终都是<code>&lt;html&gt;</code>元素。在XML中，没有预定义的元素，因此任何元素都有可能成为文档元素。</p>
+<p><strong>DOM 节点</strong></p>
+<ul>
+<li>整个文档是一个文档节点。</li>
+<li>每个HTML元素是元素节点。</li>
+<li>HTML元素内的文本是文本节点。</li>
+<li>每个HTML属性是属性节点。</li>
+<li>注释是注释节点。</li>
+</ul>
+<p><strong>DOM 节点之间的关系</strong><br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;title&gt;这里是文本节点&lt;/title&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;h1&gt;DOM&lt;/h1&gt;</span><br><span class="line">    &lt;p&gt;Hello world!&lt;/p&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/dom-navigate.gif" alt="dom-navigate来源W3school"></p>
+<ul>
+<li>在节点树中，顶端节点被称为根（root）</li>
+<li>每个节点都有父节点、除了根（它没有父节点）</li>
+<li>一个节点可拥有任意数量的子</li>
+<li>同胞是拥有相同父节点的节点</li>
+</ul>
+<p>不要忘记了这里<code>title</code>和<code>p</code>中的文本节点，可以通过<code>innerHTML</code>来访问到文本节点的内容。</p>
+<hr>
+<h4 id="Node类型"><a href="#Node类型" class="headerlink" title="Node类型"></a>Node类型</h4><p>DOM1级定义了一个Node接口，该接口将由DOM中所有节点类型实现。这个Node接口在Js中是作为Node类型来实现的。js中所有节点类型都继承自Node类型，因此所有节点类型都共享着相同的基本属性和方法。</p>
+<p>常用的节点属性有：<br><br><strong>nodeName属性</strong> 规定了节点的名称：</p>
+<ul>
+<li>nodeName是只读的。</li>
+<li>元素节点的nodeName与标签名相同。</li>
+<li>属性节点的nodeName与属性名相同。</li>
+<li>文本节点的 nodeName 始终是 #text。</li>
+<li>文档节点的 nodeName 始终是 #document</li>
+</ul>
+<p><strong>nodeValue属性</strong> 规定了节点的值：</p>
+<ul>
+<li>元素节点的nodeValue是undefined或null。</li>
+<li>文本节点的nodeValue是文本本身。</li>
+<li>属性节点的弄deValue是属性的值。</li>
+</ul>
+<p><strong>nodeType</strong> 返回节点的类型（只读）：<br>比较重要的节点类型有：</p>
+<table class="dataintable" style="width:60%;"><br><tbody><tr><br><th>元素类型</th><br><th>NodeType</th><br></tr><br><br><tr><br><td>元素</td><br><td>1</td><br></tr><br><br><tr><br><td>属性</td><br><td>2</td><br></tr><br><br><tr><br><td>文本</td><br><td>3</td><br></tr><br><br><tr><br><td>注释</td><br><td>8</td><br></tr><br><br><tr><br><td>文档</td><br><td>9</td><br></tr><br></tbody></table>
+
+<blockquote>
+<p>注意：每个节点都有一个childNodes属性，其中保存着一个NodeList对象。NodeList是一种类数组对象，用于保存一组有序的节点，可以通过位置来访问这些节点。注意，虽然可以通过方括号语法来访问NodeList的值，而且这个对象也有length属性，但是它并不是Array的实例。NodeList的独特之处在于，它实际上是基于DOM结构动态执行查询的结果，因此DOM结构的变化能够自动反映在NodeList对象中。虽然所有节点类型都继承自Node，但并不是每种节点都有子节点。</p>
+</blockquote>
+<hr>
+<h4 id="Document-类型"><a href="#Document-类型" class="headerlink" title="Document 类型"></a>Document 类型</h4><p>js通过Document类型表示文档。在浏览器中，document对象是HTMLDocument（继承自Document类型）的一个实例，表示整个HTML页面。而且，document对象是window对象的一个属性，因此可以将其作为全局对象来访问。</p>
+<p>虽然DOM标准规定Document节点的子节点可以是<code>DocumentType</code> <code>Element</code> <code>ProcessingInstruction</code> <code>Comment</code>，但还有两个内置访问子节点的快捷方式。第一个就是<code>documentElement</code>属性，该属性始终指向HTML页面中的<code>&lt;html&gt;</code>元素。另一个就是通过<code>childNodes</code>列表访问文档元素。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;body&gt;&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line">###</span><br><span class="line">var html = document.documentElement;</span><br><span class="line">html === document.firstChild;//true</span><br><span class="line">html === document.childNodes[0];//true</span><br></pre></td></tr></table></figure></p>
+<p>Document另一个可能的子节点是DocumentType。通常将<code>&lt;!DOCTYPE&gt;</code>标签看成一个与文档其他部分不同的实体，可以通过document.doctype来访问她的属性。但是不同的浏览器对doctype的处理方式不同，有些浏览器不会把其解析为document的子节点。</p>
+<hr>
+<h5 id="重要的方法"><a href="#重要的方法" class="headerlink" title="重要的方法"></a>重要的方法</h5><p><strong>getElementById()</strong>:<br><br>getElementById()接收一个参数，要取得元素的Id。如果找到对应元素则返回该元素，如果不存在带有相应Id的元素，则返回null。注意，这里的Id必须与页面中元素的Id特性严格匹配，包括大小写。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;div id=&quot;myDiv&quot;&gt;some text&lt;/div&gt;</span><br><span class="line">----</span><br><span class="line">var div = document.getElementById(&apos;myDiv&apos;);</span><br></pre></td></tr></table></figure></p>
+<p><strong>getElementsByTagName()</strong>:<br><br>这个方法接收一个参数，即要取得元素的标签名，而返回的是包含零或多个元素的NodeList。在HTML文档中，这个方法会返回一个HTMLCollection对象，作为一个“动态”集合，该对象与NodeList非常相似。例如，下面代码会取得页面中所有的<code>&lt;img&gt;</code>元素，并返回一个HTMLCollection。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var images = document.getElementsByTagName(&quot;img&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>这段代码会将一个HTMLCollection对象保存在images变量中。与NNodeList对象相似，可以使用方括号语法或item()方法来访问HTMLCollection对象中的项。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">console.log(images.[0].src);</span><br><span class="line">console.log(images.item(0).src);</span><br></pre></td></tr></table></figure></p>
+<p><strong>getElementsByName():</strong>:<br><br>这个方法也只有HTMLDocument类型才有的方法。顾名思义，这个方法会返回带有给定name特性的所有元素。最常使用getElementsByName()方法的情况是取得单选按钮。与getElementsByTagName()相似getElementsByName()方法也会返回一个HTMLCollection对象。</p>
+<hr>
+<h5 id="文档写入"><a href="#文档写入" class="headerlink" title="文档写入"></a>文档写入</h5><p>有一个document对象的功能已经存在很对年了，那就是将输出流写入到网页中的功能。这个能力体现在下列4个方法中：write()、writeln()、open()、close()。其中write()和writeln()方法都接受一个字符串参数，即要写入到输出流中的文本。write()会原样写入，而writeln()则会在末尾进行换行。页面在被加载的过程中，可以使用这两个方法向页面中动态的加入内容。方法open()和close()分别用于打开和关闭网页的输出流。如果是在页面加载期间使用write()或writeln()方法，则不需要使用者两个方法。</p>
+<h4 id="Element-类型"><a href="#Element-类型" class="headerlink" title="Element 类型"></a>Element 类型</h4><p>除了Document类型之外，Element类型要算Web编程中最常用的类型了。Element类型用于表现XML或HTML元素，提供了对元素标签名、子节点及特性的访问。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var div = document.getElementById(&apos;someElement&apos;);</span><br><span class="line">div.getAttribute(&apos;id&apos;);//获取div的id属性值</span><br><span class="line">div.getAttribute(&apos;class&apos;);//获取div的class属性值</span><br><span class="line"></span><br><span class="line">#####</span><br><span class="line">//与getAttribute()对应的是setAtrribute()，这个方法接收两个参数：设置的属性名和值。如果之前存在值则会代替值，否则会创建该值。</span><br><span class="line">div.setAtrribute(&apos;id&apos;, &apos;someElementId&apos;);//设置element的id值</span><br><span class="line"></span><br><span class="line">#####</span><br><span class="line">div.removeAttribute(&quot;id&quot;);//删除element的id属性</span><br><span class="line"></span><br><span class="line">#####</span><br><span class="line">var div = document.createElement(&apos;div&apos;);//创建一个div</span><br><span class="line">div.id = &apos;elementId&apos;;//设置div的id属性值</span><br><span class="line">document.body.appendChild(div);//将div添加到body使其生效</span><br></pre></td></tr></table></figure></p>
+<h4 id="Text类型"><a href="#Text类型" class="headerlink" title="Text类型"></a>Text类型</h4><p>文本节点由Text类型表示，包含的是可以按照字面解释的纯文本内容。纯文本内容可以是包含转义后的HTML字符，但不能包含HTML代码。在默认情况下，每个可以包含内容的元素最多只能有一个文本节点，而且必须确实有内容存在。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;div&gt;&lt;/div&gt;没有内容，没有文本节点</span><br><span class="line">&lt;div&gt; &lt;/div&gt;有一个空格因而有一个文本节点</span><br><span class="line">&lt;div&gt;Hello world&lt;/div&gt;有一个文本节点</span><br></pre></td></tr></table></figure></p>
+<hr>
+<blockquote>
+<p>以上为本人学习js过程中的一些记录，大部分内容源于对《Professional Javascript for Web Developers》以及W3school的整理，不做参考！</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/01/26/DOM1级节点层次以及常用方法/" data-id="cjlan6b8f0009ktqfwc4hh9mx" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DOM/">DOM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/01/30/APIs-chrome-storage/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          APIs.chrome.storage
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/25/js中三种函数定义的差别以及函数声明提升/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">js中三种函数定义的差别以及函数声明提升</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chromeapp/">chromeapp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/css/">css</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding-is-interesting/">Coding is interesting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSQL/">NoSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/block-chain/">block-chain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chromeapp/">chromeapp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dom/">dom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flux/">flux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game-dev/">game-dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gcd/">gcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http/">http</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libgdx/">libgdx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltc/">ltc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pow/">pow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/">story</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端自动化/">前端自动化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序/">排序</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Coding-is-interesting/" style="font-size: 10px;">Coding is interesting</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/NoSQL/" style="font-size: 10px;">NoSQL</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/block-chain/" style="font-size: 10px;">block-chain</a> <a href="/tags/c/" style="font-size: 18px;">c</a> <a href="/tags/chromeapp/" style="font-size: 16px;">chromeapp</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/dom/" style="font-size: 10px;">dom</a> <a href="/tags/flux/" style="font-size: 12px;">flux</a> <a href="/tags/game-dev/" style="font-size: 10px;">game-dev</a> <a href="/tags/gcd/" style="font-size: 10px;">gcd</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/libgdx/" style="font-size: 10px;">libgdx</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/ltc/" style="font-size: 10px;">ltc</a> <a href="/tags/math/" style="font-size: 14px;">math</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/pow/" style="font-size: 10px;">pow</a> <a href="/tags/react/" style="font-size: 12px;">react</a> <a href="/tags/redux/" style="font-size: 12px;">redux</a> <a href="/tags/story/" style="font-size: 10px;">story</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/前端自动化/" style="font-size: 10px;">前端自动化</a> <a href="/tags/排序/" style="font-size: 10px;">排序</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/01/10/awk-入坑指北/">awk 入坑指北</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/12/关于自由软件与开源协议/">关于自由软件与开源协议</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/10/CPU挖矿-利用VPS挖莱特币/">CPU挖矿-利用VPS挖莱特币</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/30/See-U-2016/">See U 2016</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/26/Redux中间件与异步Action/">Redux中间件与异步Action</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Jiavan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

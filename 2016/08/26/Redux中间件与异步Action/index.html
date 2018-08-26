@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83371004-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <title>Redux中间件与异步Action | Jiavan 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在之前的浅谈Flux架构及Redux实践一文中我们初步的谈及了Redux的数据流思想，并做了一个简单的加减器。但是还没有接触到Redux更多常用的场景，异步操作、API调用，如何连接到UI层等，Redux可以与很多框架搭配包括Vue、React甚至是纯JavaScript。后面我们会用一个实例–通过github API获取个人信息，来将Redux middleware、async action、连">
+<meta name="keywords" content="javascript,flux,redux,react">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redux中间件与异步Action">
+<meta property="og:url" content="https://jiavan.com/2016/08/26/Redux中间件与异步Action/index.html">
+<meta property="og:site_name" content="Jiavan 的博客">
+<meta property="og:description" content="在之前的浅谈Flux架构及Redux实践一文中我们初步的谈及了Redux的数据流思想，并做了一个简单的加减器。但是还没有接触到Redux更多常用的场景，异步操作、API调用，如何连接到UI层等，Redux可以与很多框架搭配包括Vue、React甚至是纯JavaScript。后面我们会用一个实例–通过github API获取个人信息，来将Redux middleware、async action、连">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://ocjx6ku93.bkt.clouddn.com/flux2-1-redux-demo.png">
+<meta property="og:image" content="http://ocjx6ku93.bkt.clouddn.com/flux2-2-react-dev-tools.png">
+<meta property="og:image" content="http://ocjx6ku93.bkt.clouddn.com/flux2-3-action-logger.png">
+<meta property="og:image" content="http://ocjx6ku93.bkt.clouddn.com/flux2-4-redux-state-chart.png">
+<meta property="og:image" content="http://ocjx6ku93.bkt.clouddn.com/flux2-5-redux-time-travel.png">
+<meta property="og:updated_time" content="2018-08-26T09:15:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redux中间件与异步Action">
+<meta name="twitter:description" content="在之前的浅谈Flux架构及Redux实践一文中我们初步的谈及了Redux的数据流思想，并做了一个简单的加减器。但是还没有接触到Redux更多常用的场景，异步操作、API调用，如何连接到UI层等，Redux可以与很多框架搭配包括Vue、React甚至是纯JavaScript。后面我们会用一个实例–通过github API获取个人信息，来将Redux middleware、async action、连">
+<meta name="twitter:image" content="http://ocjx6ku93.bkt.clouddn.com/flux2-1-redux-demo.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Jiavan 的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jiavan 的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jiavan.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Redux中间件与异步Action" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/08/26/Redux中间件与异步Action/" class="article-date">
+  <time datetime="2016-08-26T03:26:11.000Z" itemprop="datePublished">2016-08-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Redux中间件与异步Action
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在之前的<a href="http://jiavan.com/flux-and-redux/">浅谈Flux架构及Redux实践</a>一文中我们初步的谈及了Redux的数据流思想，并做了一个简单的加减器。但是还没有接触到Redux更多常用的场景，异步操作、API调用，如何连接到UI层等，Redux可以与很多框架搭配包括Vue、React甚至是纯JavaScript。后面我们会用一个实例–通过github API获取个人信息，来将Redux middleware、async action、连接到React贯穿其中。先看看我们最后写的demo的样子。</p>
+<p><img src="http://ocjx6ku93.bkt.clouddn.com/flux2-1-redux-demo.png" alt="/images/redux-demo.png"></p>
+<a id="more"></a>
+<h2 id="Middleware与异步Action"><a href="#Middleware与异步Action" class="headerlink" title="Middleware与异步Action"></a>Middleware与异步Action</h2><p>依然先看看Redux作者Dam的描述：</p>
+<blockquote>
+<p>It provides a third-party extension point between dispatching an<br>action, and the moment it reaches the reducer.</p>
+</blockquote>
+<p>我的理解是，middleware提供了一个你可以修改action的机制，这和Express/Koa的中间件有些类似，只不过这里的中间件主要是操作action。中间件对异步的action实现非常重要，因为在之前的文章中我们谈到，action是一个行为抽象，只是一个对象，reducer是一个纯函数，不应该有API调用和副作用的操作。那么怎么解决异步的问题？我们肯定不能在reducer中写，那么就考虑到了action -&gt; reducer这个过程，这就是redux middleware：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">action -&gt; middleware modify action -&gt; reducer</span><br></pre></td></tr></table></figure>
+<p>它提供的是位于 action 被发起之后，到达 reducer 之前的扩展点。 你可以利用 Redux middleware 来进行日志记录、创建崩溃报告、调用异步接口或者路由等等。</p>
+<p>在上一篇文章中我们使用的同步action，action creator返回的是一个对象，但是异步action可以是一个函数，虽然函数也是对象，这里我们只是为了区分两种不同的情况。通过使用指定的 middleware，action creator可以返回函数。这时，这个 action creator 就成为了 thunk。当 action creator 返回函数时，这个函数会被 Redux Thunk middleware 执行。这个函数并不需要保持纯净，它还可以带有副作用，包括执行异步 API 请求。这个函数还可以 dispatch action，就像 dispatch 前面定义的同步 action 一样。那么如何在action中进行网络请求？标准的做法是使用 Redux Thunk middleware。要引入 <code>redux-thunk</code> 这个专门的库才能使用。</p>
+<h2 id="搭建工作流"><a href="#搭建工作流" class="headerlink" title="搭建工作流"></a>搭建工作流</h2><p>我们将采用ES6语法，webpack进行打包，webpack-dev-server启一个本地服务器，然后用HMR技术进行React热加载，看看webpack配置信息：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"><span class="keyword">var</span> OpenBrowserPlugin = <span class="built_in">require</span>(<span class="string">'open-browser-webpack-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: &#123;</span><br><span class="line">    index: [</span><br><span class="line">      <span class="string">'webpack/hot/dev-server'</span>,</span><br><span class="line">      <span class="string">'webpack-dev-server/client?http://localhost:8080'</span>,</span><br><span class="line">      <span class="string">'./src/index.js'</span>,</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: <span class="string">'./build'</span>,</span><br><span class="line">    filename: <span class="string">'[name].js'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  devtool: <span class="string">'source-map'</span>,</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    loaders: [&#123;</span><br><span class="line">      test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">      loader: <span class="string">'babel'</span>,</span><br><span class="line">      query: &#123;</span><br><span class="line">        presets: [<span class="string">'es2015'</span>, <span class="string">'stage-0'</span>, <span class="string">'react'</span>],</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">      test: <span class="regexp">/\.less$/</span>,</span><br><span class="line">      loader: <span class="string">'style!css!less'</span>,</span><br><span class="line">    &#125;],</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> webpack.HotModuleReplacementPlugin(),</span><br><span class="line">    <span class="keyword">new</span> webpack.NoErrorsPlugin(),</span><br><span class="line">    <span class="keyword">new</span> OpenBrowserPlugin(&#123; <span class="attr">url</span>: <span class="string">'http://localhost:8080'</span> &#125;),</span><br><span class="line">  ]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中<code>open-browser-webpack-plugin</code>插件将会帮助我们自动打开浏览器，用<code>babel</code>进行es编译，<code>less</code>来维护我们的css样式，以及使用dev-tool来生成source map，<code>HotModuleReplacementPlugin</code>来进行热更新。</p>
+<p>再看看我们最后的目录结构：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">├── build</span><br><span class="line">│   ├── index.html</span><br><span class="line">│   └── index.js</span><br><span class="line">├── node_modules</span><br><span class="line">├── package.json</span><br><span class="line">├── src</span><br><span class="line">│   ├── actions</span><br><span class="line">│   │   └── actions.js</span><br><span class="line">│   ├── components</span><br><span class="line">│   │   ├── index.js</span><br><span class="line">│   │   ├── Profile</span><br><span class="line">│   │   │   ├── Profile.js</span><br><span class="line">│   │   │   └── Profile.less</span><br><span class="line">│   │   └── Search</span><br><span class="line">│   │       ├── Search.js</span><br><span class="line">│   │       └── Search.less</span><br><span class="line">│   ├── containers</span><br><span class="line">│   │   ├── App.js</span><br><span class="line">│   │   ├── App.less</span><br><span class="line">│   │   └── test.less</span><br><span class="line">│   ├── index.html</span><br><span class="line">│   ├── index.js</span><br><span class="line">│   └── reducers</span><br><span class="line">│       └── reducers.js</span><br><span class="line">└── webpack.config.js</span><br></pre></td></tr></table></figure></p>
+<p>其中<code>containers</code>放置我们的容器组件，<code>components</code>放置展示性组件，打包入口是<code>index.js</code>。</p>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><h3 id="Redux"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</h3><p><strong>state</strong><br><br>使用Redux非常重要的一点就是设计好顶层的state，在demo中我们需要的state大概长这个样子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  isFetchingData, // boolean</span><br><span class="line">  username, // string</span><br><span class="line">  profile, // object</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中<code>isFetchingData</code>是网络请求的状态，正在拉取数据为true，<code>username</code>是我们要获取用户信息的名字，<code>profile</code>是我们拉取用户的详细信息，这个将会是一个Ajax请求，最后由github API提供。</p>
+<p><strong>actions</strong><br><br>同步action我们不再讲述，上一篇文章已经说得比较清楚，这里我们重点说异步action，app的所有action如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> GET_INFO = <span class="string">'GET_INFO'</span>; <span class="comment">// 获取用户信息</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> FETCHING_DATA = <span class="string">'FETCHING_DATA'</span>; <span class="comment">// 拉取状态</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> RECEIVE_USER_DATA = <span class="string">'RECEIVE_USER_DATA'</span>; <span class="comment">//接收到拉取的状态</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// async action creator</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">fetchUserInfo</span>(<span class="params">username</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">dispatch</span>) </span>&#123;</span><br><span class="line">    dispatch(fetchingData(<span class="literal">true</span>));</span><br><span class="line">    <span class="keyword">return</span> fetch(<span class="string">`https://api.github.com/users/<span class="subst">$&#123;username&#125;</span>`</span>)</span><br><span class="line">    .then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(response);</span><br><span class="line">      <span class="keyword">return</span> response.json();</span><br><span class="line">    &#125;)</span><br><span class="line">    .then(<span class="function"><span class="params">json</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(json);</span><br><span class="line">      <span class="keyword">return</span> json;</span><br><span class="line">    &#125;)</span><br><span class="line">    .then(<span class="function">(<span class="params">json</span>) =&gt;</span> &#123;</span><br><span class="line">      dispatch(receiveUserData(json))</span><br><span class="line">    &#125;)</span><br><span class="line">    .then(<span class="function"><span class="params">()</span> =&gt;</span> dispatch(fetchingData(<span class="literal">false</span>)));</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面网络请求用到了<code>fetch</code>这个API，它会返回一个Promise，还比较新可以使用社区提供的polyfill或者使用纯粹的XHR都行，这都不是重点。我们看看这个action生成函数返回了一个函数，并且在这个函数中还有<code>dispatch</code>操作，我们通过中间件传入的dispatch可以用来dispatch actions。在上面的promise链式中首先我们打印了github API返回Response object，然后输出了json格式的数据，然后dispatch了<code>RECEIVE_USER_DATA</code>这个action表示接收到了网络请求，并需要修改state(注：这里我们没有考虑网络请求失败的情况)，最后我们dispatch了<code>FETCHING_DATA</code>并告诉对应reducer下一个state的isFetchingData为false，表示数据拉取完毕。</p>
+<p><strong>reducer</strong><br><br>这里看看最核心的reducer，操作profile这一块的：<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">profile</span>(<span class="params">state = &#123;&#125;, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> GET_INFO:</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">Object</span>.assign(&#123;&#125;, state, &#123;</span><br><span class="line">        username: action.username,</span><br><span class="line">      &#125;);</span><br><span class="line">    <span class="keyword">case</span> RECEIVE_USER_DATA:</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">Object</span>.assign(&#123;&#125;, state, action.profile);</span><br><span class="line">    <span class="keyword">default</span>: <span class="keyword">return</span> state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isFetchingData</span>(<span class="params"></span>) </span>&#123;...&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">username</span>(<span class="params"></span>) </span>&#123;...&#125;</span><br><span class="line"><span class="keyword">const</span> rootReducer = combineReducers(&#123;</span><br><span class="line">  isFetchingData,</span><br><span class="line">  username,</span><br><span class="line">  profile,</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> rootReducer;</span><br></pre></td></tr></table></figure></p>
+<p>将拉取到的profile对象assign到之前的state，最后通过<code>combineReducers</code>函数合并为一个reducer。</p>
+<h3 id="连接到React"><a href="#连接到React" class="headerlink" title="连接到React"></a>连接到React</h3><p>我们通过<code>react-redux</code>提供的<code>connect</code>方法与<code>Provider</code>来连接到React，<code>Provider</code>主要的作用是包装我们的容器组件，<code>connect</code>用于将redux与react进行连接，connect() 允许你从 Redux store 中指定准确的 state 到你想要获取的组件中。这让你能获取到任何级别颗粒度的数据，了解更多可以参考它的<a href="http://cn.redux.js.org/docs/react-redux/api.html" target="_blank" rel="noopener">API</a>，这里我们不再敖述。它的形式可以是这样：<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mapStateToProps</span>(<span class="params">state</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    profile: state.profile,</span><br><span class="line">    isFetchingData: state.isFetchingData,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mapDispatchToProps</span>(<span class="params">dispatch</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    fetchUserInfo: <span class="function">(<span class="params">username</span>) =&gt;</span> dispatch(fetchUserInfo(username))</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; fetchUserInfo, profile, isFetchingData &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div className=<span class="string">'container'</span>&gt;</span><br><span class="line">        &lt;Search fetchUserInfo=&#123;fetchUserInfo&#125; isFetchingData=&#123;isFetchingData&#125; /&gt;</span><br><span class="line">        &#123;<span class="string">'name'</span> <span class="keyword">in</span> profile ? <span class="xml"><span class="tag">&lt;<span class="name">Profile</span> <span class="attr">profile</span>=<span class="string">&#123;profile&#125;</span> <span class="attr">isFetchingData</span>=<span class="string">&#123;isFetchingData&#125;</span> /&gt;</span> : ''&#125;</span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> connect(</span><br><span class="line">  mapStateToProps,</span><br><span class="line">  mapDispatchToProps</span><br><span class="line">)(App);</span><br></pre></td></tr></table></figure></p>
+<p><code>connect</code>是个可以执行两次的柯里化函数，第一次传入的参数相当于一系列的定制化东西，第二次传入的是你要连接的React组件，然后返回一个新的React组件。第一次执行时传入的参数是mapStateToProps, mapDispatchToProps, mergeProps, options。也就是说这里相当于帮组容器选择它在整个Store中所需的state与dispatch回调，这些将会被connect以Props的形式绑定到App容器，我们可以通过React开发者工具看到这一点：</p>
+<p><img src="http://ocjx6ku93.bkt.clouddn.com/flux2-2-react-dev-tools.png" alt=""></p>
+<p>第一次执行，选择需要的state，第二次传入App容器组件然后返回新的组件。然后创建整个应用的store：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> loggerMiddleware = createLogger();</span><br><span class="line"><span class="keyword">const</span> store = createStore(</span><br><span class="line">  rootReducer,</span><br><span class="line">  compose(</span><br><span class="line">    applyMiddleware(</span><br><span class="line">      thunkMiddleware,</span><br><span class="line">      loggerMiddleware,</span><br><span class="line">    ),</span><br><span class="line">    <span class="built_in">window</span>.devToolsExtension ? <span class="built_in">window</span>.devToolsExtension() : <span class="function"><span class="params">f</span> =&gt;</span> f</span><br><span class="line">  )</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>这里我们用到了两个中间件，<code>loggerMiddleware</code>用于输出我们每一次的action，可以明确的看到每次action后state的前后状态，<code>thunkMiddleware</code>用于网络请求处理，最后<code>window.devToolsExtension ? window.devToolsExtension() : f =&gt; f</code>是为了连接我们的<a href="https://github.com/gaearon/redux-devtools#chrome-extension" target="_blank" rel="noopener">redux-dev-tool</a>，可以明确的看到我们dispatch的action，还能达到时间旅行的效果。最后通过<code>Provider</code>输入我们的store，整个应用就跑起来啦！<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> mountRoot = <span class="built_in">document</span>.getElementById(<span class="string">'app'</span>);</span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">    &lt;App /&gt;</span><br><span class="line">  &lt;<span class="regexp">/Provider&gt;,</span></span><br><span class="line"><span class="regexp">  mountRoot</span></span><br><span class="line"><span class="regexp">);</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="Run"><a href="#Run" class="headerlink" title="Run"></a>Run</h3><p>命令行输入<code>npm run dev</code>，整个应用就跑起来了，在输入框输入Jiavan，我们来看看action与数据流：</p>
+<p><img src="http://ocjx6ku93.bkt.clouddn.com/flux2-3-action-logger.png" alt=""></p>
+<p>在console面板，logger中间件为我们打印除了每一次dispatch action以及前后的state值，是不是非常直观，然而厉害的还在后面。redux-dev-tool可以直接查看我们state tree以及对action做undo操作达到时间旅行的效果！<br><img src="http://ocjx6ku93.bkt.clouddn.com/flux2-4-redux-state-chart.png" alt=""><br><img src="http://ocjx6ku93.bkt.clouddn.com/flux2-5-redux-time-travel.png" alt=""></p>
+<p>完整的demo在文章最后将会贴出，现在总结下：首先我们规划了整个应用的state，然后进行数据流层的代码开发，同步异步action的编写以及reducer的开发，再通过选择我们容器组件所需的state与dispatch回调通过connect方法绑定后输出新的组件，通过创建store与Provider将其与React连接，这样整个应用的任督二脉就被打通了。最后极力推荐Redux的官方文档。</p>
+<p>完整demo -&gt; <a href="https://github.com/Jiavan/react-async-redux" target="_blank" rel="noopener">https://github.com/Jiavan/react-async-redux</a></p>
+<p>运行<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">1. npm install</span><br><span class="line">2. webpack</span><br><span class="line">3. npm run dev</span><br></pre></td></tr></table></figure></p>
+<p>参考文章:</p>
+<ul>
+<li><a href="http://cn.redux.js.org/docs/react-redux/api.html" target="_blank" rel="noopener">http://cn.redux.js.org/docs/react-redux/api.html</a></li>
+<li><a href="http://www.jianshu.com/p/ab9e4d4c8a4b" target="_blank" rel="noopener">http://www.jianshu.com/p/ab9e4d4c8a4b</a></li>
+</ul>
+<p>转载请注明出处 <a href="http://jiavan.com/react-async-redux/">http://jiavan.com/react-async-redux/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jiavan.com/2016/08/26/Redux中间件与异步Action/" data-id="cjlan6b91000vktqff7e7enpl" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flux/">flux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react/">react</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redux/">redux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/12/30/See-U-2016/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          See U 2016
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/21/浅谈Flux架构及Redux实践/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">浅谈Flux架构及Redux实践</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chromeapp/">chromeapp</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/css/">css</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CAP/">CAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding-is-interesting/">Coding is interesting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSQL/">NoSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/block-chain/">block-chain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chromeapp/">chromeapp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dom/">dom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flux/">flux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game-dev/">game-dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gcd/">gcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http/">http</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libgdx/">libgdx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltc/">ltc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pow/">pow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/">story</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端自动化/">前端自动化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序/">排序</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Coding-is-interesting/" style="font-size: 10px;">Coding is interesting</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/NoSQL/" style="font-size: 10px;">NoSQL</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/block-chain/" style="font-size: 10px;">block-chain</a> <a href="/tags/c/" style="font-size: 18px;">c</a> <a href="/tags/chromeapp/" style="font-size: 16px;">chromeapp</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/dom/" style="font-size: 10px;">dom</a> <a href="/tags/flux/" style="font-size: 12px;">flux</a> <a href="/tags/game-dev/" style="font-size: 10px;">game-dev</a> <a href="/tags/gcd/" style="font-size: 10px;">gcd</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/libgdx/" style="font-size: 10px;">libgdx</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/ltc/" style="font-size: 10px;">ltc</a> <a href="/tags/math/" style="font-size: 14px;">math</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/pow/" style="font-size: 10px;">pow</a> <a href="/tags/react/" style="font-size: 12px;">react</a> <a href="/tags/redux/" style="font-size: 12px;">redux</a> <a href="/tags/story/" style="font-size: 10px;">story</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/前端自动化/" style="font-size: 10px;">前端自动化</a> <a href="/tags/排序/" style="font-size: 10px;">排序</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/01/10/awk-入坑指北/">awk 入坑指北</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/12/关于自由软件与开源协议/">关于自由软件与开源协议</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/10/CPU挖矿-利用VPS挖莱特币/">CPU挖矿-利用VPS挖莱特币</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/30/See-U-2016/">See U 2016</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/26/Redux中间件与异步Action/">Redux中间件与异步Action</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Jiavan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
