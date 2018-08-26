@@ -102,25 +102,15 @@ ga('send', 'pageview');
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="地址"><a href="#地址" class="headerlink" title="地址"></a>地址</h2><p>私钥由 32 字节随机数组成，通过私钥可以计算出公钥，公钥通过一系列 hash 和编码（Base58，避免书写混淆如I和L）可以得到比特币地址，可以简单的将地址理解为公钥的摘要。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 比特币使用了椭圆曲线签名算法</span><br><span class="line">私钥 =&gt; 公钥 =&gt; 比特币地址</span><br></pre></td></tr></table></figure></p>
-<h2 id="区块结构"><a href="#区块结构" class="headerlink" title="区块结构"></a>区块结构</h2><p><img src="/images/block-structure.jpeg" alt="block-structure"><br>区块 hash 值计算其实不会包含区块体，打包时只有区块头被用于计算 hash，常说的区块 hash 其实是区块头的 hash，他可以用来标识一个区块。<br>区块头是 80 个字节，而平均每个区块包含 2500 左右个交易，所以完整的交易信息比区块头会大很多。</p>
-<h2 id="Merkle-树"><a href="#Merkle-树" class="headerlink" title="Merkle 树"></a>Merkle 树</h2><p>在了解 Merkle 树之前我们先了解<code>零知识证明</code>。</p>
-<blockquote>
-<p>证明者在不向验证者提供任何有用信息的前提下，使验证者相信某个论断是正确的。<br>例如，A 向 B 证明自己有一个物品，但 B 无法拿到这个物品，B 无法用 A 的证明去向别人证明自己也拥有这个物品。</p>
-</blockquote>
-<p><img src="/images/merkle-tree.png" alt="merkle-tree"><br>默克尔树的特点是任何底层数据的变化都会传递到其父节点，一直到树根。</p>
-<p>默克尔树的经典应用场景：</p>
-<ul>
-<li>快速比较大量数据，当两个默克尔树树根相同时，则意味着所代表的数据必然相同。</li>
-<li>快速定位修改，如果 D0 被修改，会影响到 N0，N4，Root。因此定位修改可以通过 Root -&gt; N4 -&gt; N0 快速定位到 D0 的修改。</li>
-<li>零知识证明，例如如何证明某个数据中包含 D0，可以直接构建一个 Merkle 树，公布 N0、N1、N4、N5、Root，可以很容易检测到 D0 的存在，但不知道其内容。</li>
-</ul>
-<p>每个交易被看成一个数据块，Merkle 树是一种哈希二叉树，这样可以单独拿出一颗子树来对部分数据进行校验。<br>每个叶子节点是交易信息的哈希，往上的父节点是子节点哈希串拼接之后的再次哈希，直到剩下一个根节点即为 Merkel 树根，树根将会被存入区块头。<br>Merkle 树需要偶数个叶子节点，所以在出现奇数个交易时，最后一个叶子节点会被复制一份构成偶数个叶子节点。</p>
-<h2 id="SPV"><a href="#SPV" class="headerlink" title="SPV"></a>SPV</h2><p>由于不是所有节点都具备储存完整区块信息的能力，更多节点是以 SPV（Simplified Payment Verification 简单支付验证）钱包的方式接入比特币网络。通过 SPV 仅仅保存区块头可以在不拥有完整区块数据的情况下对交易进行验证。</p>
-
+        
+          <p class="article-more-link">
+            <a href="/2018/08/26/比特币数据结构科普/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jiavan.com/2018/08/26/比特币数据结构科普/" data-id="cjlanu78i00236vqf3h7tkz2k" class="article-share-link">Share</a>
+      <a data-url="https://jiavan.com/2018/08/26/比特币数据结构科普/" data-id="cjlanxc740022afqf8eley7t5" class="article-share-link">Share</a>
       
         <a href="https://jiavan.com/2018/08/26/比特币数据结构科普/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -169,7 +159,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jiavan.com/2018/03/06/过去的-2017/" data-id="cjlanu78z002e6vqfozcxjj0o" class="article-share-link">Share</a>
+      <a data-url="https://jiavan.com/2018/03/06/过去的-2017/" data-id="cjlanxc7m002fafqf0inbicuy" class="article-share-link">Share</a>
       
         <a href="https://jiavan.com/2018/03/06/过去的-2017/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -218,7 +208,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jiavan.com/2018/01/10/awk-入坑指北/" data-id="cjlanu77v001a6vqfbxjsj65j" class="article-share-link">Share</a>
+      <a data-url="https://jiavan.com/2018/01/10/awk-入坑指北/" data-id="cjlanxc6j001aafqfzzudd71o" class="article-share-link">Share</a>
       
         <a href="https://jiavan.com/2018/01/10/awk-入坑指北/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -263,7 +253,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jiavan.com/2017/11/12/关于自由软件与开源协议/" data-id="cjlanu787001o6vqfdydd3rpz" class="article-share-link">Share</a>
+      <a data-url="https://jiavan.com/2017/11/12/关于自由软件与开源协议/" data-id="cjlanxc6q001lafqftp4cdzph" class="article-share-link">Share</a>
       
         <a href="https://jiavan.com/2017/11/12/关于自由软件与开源协议/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -312,7 +302,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jiavan.com/2017/09/10/CPU挖矿-利用VPS挖莱特币/" data-id="cjlanu76u00066vqf2qdrxy2m" class="article-share-link">Share</a>
+      <a data-url="https://jiavan.com/2017/09/10/CPU挖矿-利用VPS挖莱特币/" data-id="cjlanxc5k0009afqfb8psmo90" class="article-share-link">Share</a>
       
         <a href="https://jiavan.com/2017/09/10/CPU挖矿-利用VPS挖莱特币/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -361,7 +351,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jiavan.com/2016/12/30/See-U-2016/" data-id="cjlanu77l00106vqficgsmkt2" class="article-share-link">Share</a>
+      <a data-url="https://jiavan.com/2016/12/30/See-U-2016/" data-id="cjlanxc69000zafqf5265zjfh" class="article-share-link">Share</a>
       
         <a href="https://jiavan.com/2016/12/30/See-U-2016/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -411,7 +401,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jiavan.com/2016/08/26/Redux中间件与异步Action/" data-id="cjlanu77j000v6vqf8heg1998" class="article-share-link">Share</a>
+      <a data-url="https://jiavan.com/2016/08/26/Redux中间件与异步Action/" data-id="cjlanxc64000vafqfmbo4n4ib" class="article-share-link">Share</a>
       
         <a href="https://jiavan.com/2016/08/26/Redux中间件与异步Action/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -462,7 +452,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jiavan.com/2016/08/21/浅谈Flux架构及Redux实践/" data-id="cjlanu78u00286vqfbocvt7j6" class="article-share-link">Share</a>
+      <a data-url="https://jiavan.com/2016/08/21/浅谈Flux架构及Redux实践/" data-id="cjlanxc7g0029afqfx66ontbi" class="article-share-link">Share</a>
       
         <a href="https://jiavan.com/2016/08/21/浅谈Flux架构及Redux实践/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -509,7 +499,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jiavan.com/2016/05/29/实现一个简单的HTTP-Client/" data-id="cjlanu78a001s6vqfoivddc1f" class="article-share-link">Share</a>
+      <a data-url="https://jiavan.com/2016/05/29/实现一个简单的HTTP-Client/" data-id="cjlanxc6v001safqfp1v81ewg" class="article-share-link">Share</a>
       
         <a href="https://jiavan.com/2016/05/29/实现一个简单的HTTP-Client/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -557,7 +547,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jiavan.com/2016/04/16/XSS持久型攻击实例-向学校图书馆网站页面注入JS/" data-id="cjlanu77o00126vqf8jnmp9md" class="article-share-link">Share</a>
+      <a data-url="https://jiavan.com/2016/04/16/XSS持久型攻击实例-向学校图书馆网站页面注入JS/" data-id="cjlanxc6d0012afqf0p6nfdvp" class="article-share-link">Share</a>
       
         <a href="https://jiavan.com/2016/04/16/XSS持久型攻击实例-向学校图书馆网站页面注入JS/#disqus_thread" class="article-comment-link">Comments</a>
       

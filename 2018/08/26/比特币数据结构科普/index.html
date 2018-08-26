@@ -20,20 +20,20 @@ ga('send', 'pageview');
   
   <title>比特币数据结构科普 | Jiavan 的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="地址私钥由 32 字节随机数组成，通过私钥可以计算出公钥，公钥通过一系列 hash 和编码（Base58，避免书写混淆如I和L）可以得到比特币地址，可以简单的将地址理解为公钥的摘要。# 比特币使用了椭圆曲线签名算法私钥 =&amp;gt; 公钥 =&amp;gt; 比特币地址 区块结构区块 hash 值计算其实不会包含区块体，打包时只有区块头被用于计算 hash，常说的区块 hash 其实是区块头的 hash，他">
+  <meta name="description" content="地址私钥由 32 字节随机数组成，通过私钥可以计算出公钥，公钥通过一系列 hash 和编码（Base58，避免书写混淆如I和L）可以得到比特币地址，可以简单的将地址理解为公钥的摘要。# 比特币使用了椭圆曲线签名算法私钥 =&amp;gt; 公钥 =&amp;gt; 比特币地址">
 <meta name="keywords" content="btc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="比特币数据结构科普">
 <meta property="og:url" content="https://jiavan.com/2018/08/26/比特币数据结构科普/index.html">
 <meta property="og:site_name" content="Jiavan 的博客">
-<meta property="og:description" content="地址私钥由 32 字节随机数组成，通过私钥可以计算出公钥，公钥通过一系列 hash 和编码（Base58，避免书写混淆如I和L）可以得到比特币地址，可以简单的将地址理解为公钥的摘要。# 比特币使用了椭圆曲线签名算法私钥 =&amp;gt; 公钥 =&amp;gt; 比特币地址 区块结构区块 hash 值计算其实不会包含区块体，打包时只有区块头被用于计算 hash，常说的区块 hash 其实是区块头的 hash，他">
+<meta property="og:description" content="地址私钥由 32 字节随机数组成，通过私钥可以计算出公钥，公钥通过一系列 hash 和编码（Base58，避免书写混淆如I和L）可以得到比特币地址，可以简单的将地址理解为公钥的摘要。# 比特币使用了椭圆曲线签名算法私钥 =&amp;gt; 公钥 =&amp;gt; 比特币地址">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://jiavan.com/images/block-structure.jpeg">
 <meta property="og:image" content="https://jiavan.com/images/merkle-tree.png">
-<meta property="og:updated_time" content="2018-08-26T09:37:22.000Z">
+<meta property="og:updated_time" content="2018-08-26T09:39:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="比特币数据结构科普">
-<meta name="twitter:description" content="地址私钥由 32 字节随机数组成，通过私钥可以计算出公钥，公钥通过一系列 hash 和编码（Base58，避免书写混淆如I和L）可以得到比特币地址，可以简单的将地址理解为公钥的摘要。# 比特币使用了椭圆曲线签名算法私钥 =&amp;gt; 公钥 =&amp;gt; 比特币地址 区块结构区块 hash 值计算其实不会包含区块体，打包时只有区块头被用于计算 hash，常说的区块 hash 其实是区块头的 hash，他">
+<meta name="twitter:description" content="地址私钥由 32 字节随机数组成，通过私钥可以计算出公钥，公钥通过一系列 hash 和编码（Base58，避免书写混淆如I和L）可以得到比特币地址，可以简单的将地址理解为公钥的摘要。# 比特币使用了椭圆曲线签名算法私钥 =&amp;gt; 公钥 =&amp;gt; 比特币地址">
 <meta name="twitter:image" content="https://jiavan.com/images/block-structure.jpeg">
   
     <link rel="alternate" href="/atom.xml" title="Jiavan 的博客" type="application/atom+xml">
@@ -108,6 +108,7 @@ ga('send', 'pageview');
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="地址"><a href="#地址" class="headerlink" title="地址"></a>地址</h2><p>私钥由 32 字节随机数组成，通过私钥可以计算出公钥，公钥通过一系列 hash 和编码（Base58，避免书写混淆如I和L）可以得到比特币地址，可以简单的将地址理解为公钥的摘要。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 比特币使用了椭圆曲线签名算法</span><br><span class="line">私钥 =&gt; 公钥 =&gt; 比特币地址</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
 <h2 id="区块结构"><a href="#区块结构" class="headerlink" title="区块结构"></a>区块结构</h2><p><img src="/images/block-structure.jpeg" alt="block-structure"><br>区块 hash 值计算其实不会包含区块体，打包时只有区块头被用于计算 hash，常说的区块 hash 其实是区块头的 hash，他可以用来标识一个区块。<br>区块头是 80 个字节，而平均每个区块包含 2500 左右个交易，所以完整的交易信息比区块头会大很多。</p>
 <h2 id="Merkle-树"><a href="#Merkle-树" class="headerlink" title="Merkle 树"></a>Merkle 树</h2><p>在了解 Merkle 树之前我们先了解<code>零知识证明</code>。</p>
 <blockquote>
@@ -126,7 +127,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jiavan.com/2018/08/26/比特币数据结构科普/" data-id="cjlanu78i00236vqf3h7tkz2k" class="article-share-link">Share</a>
+      <a data-url="https://jiavan.com/2018/08/26/比特币数据结构科普/" data-id="cjlanxc740022afqf8eley7t5" class="article-share-link">Share</a>
       
         <a href="https://jiavan.com/2018/08/26/比特币数据结构科普/#disqus_thread" class="article-comment-link">Comments</a>
       
