@@ -24,20 +24,20 @@ ga('send', 'pageview');
 <meta name="keywords" content="javascript,xss,web">
 <meta property="og:type" content="article">
 <meta property="og:title" content="XSS持久型攻击实例--向学校图书馆网站页面注入JS">
-<meta property="og:url" content="https://jiavan.com/2016/04/16/XSS持久型攻击实例-向学校图书馆网站页面注入JS/index.html">
+<meta property="og:url" content="http://jiavan.com/2016/04/16/XSS持久型攻击实例-向学校图书馆网站页面注入JS/index.html">
 <meta property="og:site_name" content="Jiavan 的博客">
 <meta property="og:description" content="XSS攻击是Web中很常见的攻击，其原理有点类似与SQL注入，改变了原来的执行逻辑。之前了解过一些XSS，但是没有去具体实现，刚刚拿学校的网站做了下XSS攻击，成功的给图书馆网站下了毒+_+… XSS攻击大概可以分为两种，一种是非持久型攻击，这一般只会影响个体用户，不会造成长期的影响，另一种为持久型攻击，也就是我们要讲的这种，将我们的代码注入到目标服务器页面上，所有访问这个页面的用户都会被攻击。其">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://jiavan.com/images/lib-cqut-1.png">
-<meta property="og:image" content="https://jiavan.com/images/lib-cqut-2.png">
-<meta property="og:image" content="https://jiavan.com/images/lib-cqut-3.png">
-<meta property="og:image" content="https://jiavan.com/images/lib-cqut-4.png">
-<meta property="og:image" content="https://jiavan.com/images/lib-cqut-5.png">
+<meta property="og:image" content="http://jiavan.com/images/lib-cqut-1.png">
+<meta property="og:image" content="http://jiavan.com/images/lib-cqut-2.png">
+<meta property="og:image" content="http://jiavan.com/images/lib-cqut-3.png">
+<meta property="og:image" content="http://jiavan.com/images/lib-cqut-4.png">
+<meta property="og:image" content="http://jiavan.com/images/lib-cqut-5.png">
 <meta property="og:updated_time" content="2018-08-26T09:15:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="XSS持久型攻击实例--向学校图书馆网站页面注入JS">
 <meta name="twitter:description" content="XSS攻击是Web中很常见的攻击，其原理有点类似与SQL注入，改变了原来的执行逻辑。之前了解过一些XSS，但是没有去具体实现，刚刚拿学校的网站做了下XSS攻击，成功的给图书馆网站下了毒+_+… XSS攻击大概可以分为两种，一种是非持久型攻击，这一般只会影响个体用户，不会造成长期的影响，另一种为持久型攻击，也就是我们要讲的这种，将我们的代码注入到目标服务器页面上，所有访问这个页面的用户都会被攻击。其">
-<meta name="twitter:image" content="https://jiavan.com/images/lib-cqut-1.png">
+<meta name="twitter:image" content="http://jiavan.com/images/lib-cqut-1.png">
   
     <link rel="alternate" href="/atom.xml" title="Jiavan 的博客" type="application/atom+xml">
   
@@ -78,7 +78,7 @@ ga('send', 'pageview');
         <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jiavan.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://jiavan.com"></form>
       </div>
     </div>
   </div>
@@ -135,9 +135,9 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jiavan.com/2016/04/16/XSS持久型攻击实例-向学校图书馆网站页面注入JS/" data-id="cjleolxlp00126sqff4goreua" class="article-share-link">Share</a>
+      <a data-url="http://jiavan.com/2016/04/16/XSS持久型攻击实例-向学校图书馆网站页面注入JS/" data-id="cjleoo0pw0012chqff7r57deh" class="article-share-link">Share</a>
       
-        <a href="https://jiavan.com/2016/04/16/XSS持久型攻击实例-向学校图书馆网站页面注入JS/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://jiavan.com/2016/04/16/XSS持久型攻击实例-向学校图书馆网站页面注入JS/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xss/">xss</a></li></ul>
@@ -272,7 +272,7 @@ ga('send', 'pageview');
 <script>
   var disqus_shortname = 'jiavan';
   
-  var disqus_url = 'https://jiavan.com/2016/04/16/XSS持久型攻击实例-向学校图书馆网站页面注入JS/';
+  var disqus_url = 'http://jiavan.com/2016/04/16/XSS持久型攻击实例-向学校图书馆网站页面注入JS/';
   
   (function(){
     var dsq = document.createElement('script');
